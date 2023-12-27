@@ -1,6 +1,8 @@
-﻿namespace HealthyTracker.Common.Models.Configs;
+﻿using HealthyTracker.Common.Models.Configs.Abstract;
 
-public class EmailConfig
+namespace HealthyTracker.Common.Models.Configs;
+
+public class EmailConfig : ConfigBase
 {
    public string SmtpServer { get; set; } = string.Empty;
    public int SmtpPort { get; set; }
