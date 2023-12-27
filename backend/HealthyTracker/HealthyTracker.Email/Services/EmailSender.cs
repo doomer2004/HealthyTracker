@@ -5,6 +5,7 @@ using HealthyTracker.Email.Models.Base;
 using HealthyTracker.Email.Services.Interfaces;
 using LanguageExt;
 using Microsoft.Extensions.Logging;
+using EmailMessageBase = HealthyTracker.Common.Models.Base.EmailMessageBase;
 
 namespace HealthyTracker.Email.Services;
 
@@ -21,7 +22,8 @@ public class EmailSender : IEmailSender
         _logger = logger;
     }
     
-    public async Task<Option<ErrorModel>> SendEmailAsync<T>(string to, T message) where T : EmailMessageBase
+    public async Task<Option<ErrorModel>> SendEmailAsync<T>(string to, T message)
+        where T : EmailMessageBase
     {
         var path = $@"{_config.TemplatesPath}\{message.TemplateName}.cshtml";
         var response = await _fluentEmail
