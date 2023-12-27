@@ -1,17 +1,18 @@
 ﻿using HealthyTracker.DAL.Contexts;
 using HealthyTracker.DAL.Entities;
 using HealthyTracker.DAL.Repositories.Base;
+using HealthyTracker.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace HealthyTracker.DAL.Repositories;
 
-public class FoodRepository : RepositoryBase<Food, int>, IFoodRepository
+public class ProductActualRepository : RepositoryBase<ProductActual, int>, IProductActualRepository
 {
-    protected FoodRepository(ApplicationDbContext dbContext) : base(dbContext)
+    protected ProductActualRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 
-    public async Task<IEnumerable<Food>> GetAll()
+    public async Task<List<ProductActual>> GetAll()
     {
         var query = Table.AsQueryable();
         return await query.ToListAsync();

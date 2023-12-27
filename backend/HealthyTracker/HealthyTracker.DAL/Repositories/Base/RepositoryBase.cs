@@ -65,4 +65,6 @@ public class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
             throw new Exception("An error occurred updating the database");
         }
     }
+
+    
 }

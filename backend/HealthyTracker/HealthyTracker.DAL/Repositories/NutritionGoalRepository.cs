@@ -5,9 +5,9 @@ using HealthyTracker.DAL.Repositories.Interfaces;
 
 namespace HealthyTracker.DAL.Repositories;
 
-public class MealRepository : RepositoryBase<Meal, int>, IMealRepository
+public class NutritionGoalRepository : RepositoryBase<NutritionGoal, int>, INutritionGoalRepository
 {
-    protected MealRepository(ApplicationDbContext dbContext) : base(dbContext)
+    protected NutritionGoalRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 }

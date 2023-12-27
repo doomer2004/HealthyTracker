@@ -2,7 +2,7 @@
 
 namespace HealthyTracker.DAL.Repositories;
 
-public interface IFoodRepository
+public interface IProductRepository
 {
-    public Task<IEnumerable<Food>> GetAll();
+    public Task<IEnumerable<Product>> GetAll();
 }
