@@ -3,13 +3,13 @@ using HealthyTracker.DAL.Entities.Base;
 
 namespace HealthyTracker.DAL.Entities;
 
-public class Food : BaseEntity<Guid>
+public class NutritionGoal : BaseEntity<Guid>
 {
-    public string ProductName { get; set; }
-    public List<Meal> Meals { get; set; }
+    public Guid UserId { get; set; }
     public Guid NutritionId { get; set; }
     
-    
+    [ForeignKey(nameof(UserId))]
+    public User User { get; set; }
     [ForeignKey(nameof(NutritionId))]
     public Nutrition Nutrition { get; set; }
 }

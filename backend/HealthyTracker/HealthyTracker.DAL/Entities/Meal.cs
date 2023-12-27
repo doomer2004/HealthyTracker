@@ -1,10 +1,13 @@
-﻿using HealthyTracker.DAL.Entities.Base;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using HealthyTracker.DAL.Entities.Base;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HealthyTracker.DAL.Entities;
 
 public class Meal : BaseEntity<Guid>
 {
-    public string MealType { get; set; }
-    public List<Food> Foods { get; set; }
+    public Guid DailyId { get; set; }
+    
+    [ForeignKey(nameof(DailyId))]
+    public Daily Daily { get; set; }
 }
