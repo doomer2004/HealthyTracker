@@ -17,10 +17,10 @@ namespace HealthyTracker.BLL.Services.Auth.Auth;
 public class PasswordService : AuthServiceBase, IPasswordService
 {
     private readonly IEmailSender _emailSender;
-    private readonly UrisConfig _urisConfig;
+    private readonly CallbackUrisConfig _urisConfig;
     
     public PasswordService(UserManager<User> userManager, JwtConfig jwtConfig,
-        ILogger<AuthServiceBase> logger, IEmailSender emailSender, UrisConfig urisConfig) 
+        ILogger<AuthServiceBase> logger, IEmailSender emailSender, CallbackUrisConfig urisConfig) 
         : base(userManager, jwtConfig, logger)
     {
         _emailSender = emailSender;

@@ -2,5 +2,6 @@
 
 public interface IDailyService
 {
-    
+    Task AddDailyAsync(Guid userId);
+    Task<string> CheckDailyAsync(Guid userId);
 }

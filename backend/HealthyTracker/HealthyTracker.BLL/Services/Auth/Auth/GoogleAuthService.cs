@@ -9,6 +9,7 @@ using HealthyTracker.Common.Models.DTOs.Auth;
 using HealthyTracker.Common.Models.DTOs.Error;
 using HealthyTracker.DAL.Entities;
 using HealthyTracker.DAL.Repositories;
+using HealthyTracker.DAL.Repositories.Interfaces;
 using LanguageExt;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -19,11 +20,11 @@ public class GoogleAuthService : AuthServiceBase, IGoogleAuthService
 {
     private readonly GoogleConfig _googleConfig;
     private readonly IMapper _mapper;
-    private readonly UserRegistrationRepository _userRegistrationRepository;
+    private readonly IUserRegistrationRepository _userRegistrationRepository;
     
     public GoogleAuthService
         (UserManager<User> userManager, JwtConfig jwtConfig, ILogger<AuthServiceBase> logger,
-            UserRegistrationRepository userRegistrationRepository, GoogleConfig googleConfig, IMapper mapper)
+            IUserRegistrationRepository userRegistrationRepository, GoogleConfig googleConfig, IMapper mapper)
         : base(userManager, jwtConfig, logger)
     {
         _userRegistrationRepository = userRegistrationRepository;

@@ -6,6 +6,7 @@ using HealthyTracker.Common.Models.DTOs.Error;
 using HealthyTracker.Common.Models.Utility;
 using HealthyTracker.DAL.Entities;
 using HealthyTracker.DAL.Repositories;
+using HealthyTracker.DAL.Repositories.Interfaces;
 using LanguageExt;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +15,13 @@ namespace HealthyTracker.BLL.Services.UserServices.Services;
 
 public class UserRegistrationService : IUserRegistrationService
 {
-    private readonly UserRegistrationRepository _userRegistrationRepository;
+    private readonly IUserRegistrationRepository _userRegistrationRepository;
     private readonly AuthConfig _authConfig;
     private readonly UserManager<User> _userManager;
-    private readonly UrisConfig _urisConfig;
+    private readonly CallbackUrisConfig _urisConfig;
 
-    public UserRegistrationService(UserRegistrationRepository userRegistrationRepository, AuthConfig authConfig,
-        UserManager<User> userManager, UrisConfig urisConfig) 
+    public UserRegistrationService(IUserRegistrationRepository userRegistrationRepository, AuthConfig authConfig,
+        UserManager<User> userManager, CallbackUrisConfig urisConfig) 
     {
         _userRegistrationRepository = userRegistrationRepository;
         _authConfig = authConfig;
@@ -30,8 +31,8 @@ public class UserRegistrationService : IUserRegistrationService
     
     public async Task<Option<ErrorModel>> CanConfirmEmailAsync(Guid userId, string url)
     {
-        var registration = await _userRegistrationRepository.Table.
-            Include(x => x.User)
+        var registration = await _userRegistrationRepository.Table
+            .Include(x => x.User)
             .FirstOrDefaultAsync(x => x.UserId == userId);
 
         if (registration is null)
