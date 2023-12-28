@@ -7,7 +7,7 @@ namespace HealthyTracker.DAL.Repositories;
 
 public class MealRepository : RepositoryBase<Meal, int>, IMealRepository
 {
-    protected MealRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public MealRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 }

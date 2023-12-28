@@ -7,7 +7,7 @@ namespace HealthyTracker.DAL.Repositories;
 
 public class DailyRepository : RepositoryBase<Daily, int>, IDailyRepository
 {
-    protected DailyRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public DailyRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 }

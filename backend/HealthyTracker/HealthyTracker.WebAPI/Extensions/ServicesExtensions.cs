@@ -1,5 +1,5 @@
 ﻿using HealthyTracker.DAL.Contexts;
-using HealthyTracker.Utility;
+using HealthyTracker.WebAPI.Utility;
 using Microsoft.EntityFrameworkCore;
 
 namespace HealthyTracker.Extensions;

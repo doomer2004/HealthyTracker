@@ -7,7 +7,7 @@ namespace HealthyTracker.DAL.Repositories;
 
 public class NutritionGoalRepository : RepositoryBase<NutritionGoal, int>, INutritionGoalRepository
 {
-    protected NutritionGoalRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public NutritionGoalRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 }

@@ -8,13 +8,12 @@ namespace HealthyTracker.DAL.Repositories;
 
 public class ProductActualRepository : RepositoryBase<ProductActual, int>, IProductActualRepository
 {
-    protected ProductActualRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public ProductActualRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 
     public async Task<List<ProductActual>> GetAll()
     {
-        var query = Table.AsQueryable();
-        return await query.ToListAsync();
+        return await Table.ToListAsync();
     }
 }

@@ -7,13 +7,12 @@ namespace HealthyTracker.DAL.Repositories;
 
 public class ProductRepository : RepositoryBase<Product, int>, IProductRepository
 {
-    protected ProductRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public ProductRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 
     public async Task<IEnumerable<Product>> GetAll()
     {
-        var query = Table.AsQueryable();
-        return await query.ToListAsync();
+        return await Table.ToListAsync();
     }
 }

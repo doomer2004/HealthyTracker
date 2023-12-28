@@ -1,6 +1,9 @@
-﻿namespace HealthyTracker.DAL.Repositories.Interfaces;
+﻿using HealthyTracker.DAL.Entities;
+using HealthyTracker.DAL.Repositories.Base;
 
-public interface IUserRegistrationRepository
+namespace HealthyTracker.DAL.Repositories.Interfaces;
+
+public interface IUserRegistrationRepository : IRepository<UserRegistration, int>
 {
     
 }

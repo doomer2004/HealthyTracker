@@ -8,7 +8,7 @@ namespace HealthyTracker.DAL.Repositories;
 
 public class UserRegistrationRepository : RepositoryBase<UserRegistration, int>, IUserRegistrationRepository
 {
-    protected UserRegistrationRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public UserRegistrationRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
     }
 
