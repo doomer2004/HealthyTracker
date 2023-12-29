@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using HealthyTracker.BLL.Extensions;
 using HealthyTracker.BLL.Utility;
+using HealthyTracker.Client.Nutrition;
 using HealthyTracker.Common.Enums;
 using HealthyTracker.Common.Models.Configs;
 using HealthyTracker.Common.Models.DTOs.Auth;
@@ -21,7 +22,10 @@ public abstract class AuthServiceBase
     protected readonly UserManager<User> _userManager;
     protected readonly ILogger<AuthServiceBase> _logger;
 
-    protected AuthServiceBase(UserManager<User> userManager, JwtConfig jwtConfig, ILogger<AuthServiceBase> logger)
+    protected AuthServiceBase(
+        UserManager<User> userManager,
+        JwtConfig jwtConfig,
+        ILogger<AuthServiceBase> logger)
     {
         _jwtConfig = jwtConfig;
         _userManager = userManager;

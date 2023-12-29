@@ -4,6 +4,7 @@ using HealthyTracker.BLL.Extensions;
 using HealthyTracker.BLL.Services.Auth.Auth;
 using HealthyTracker.BLL.Services.Auth.Interfaces;
 using HealthyTracker.BLL.Services.UserServices.Services;
+using HealthyTracker.Client.Nutrition;
 using HealthyTracker.Common.Models.Configs;
 using HealthyTracker.DAL.Contexts;
 using HealthyTracker.DAL.Entities;
@@ -15,7 +16,6 @@ using HealthyTracker.Extensions;
 using HealthyTracker.Mapping.Profiles;
 using HealthyTracker.Validation.Auth;
 using HealthyTracker.Validation.Extensions;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +25,8 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Configs
+builder.Services.AddHttpClient("NutritionsClient");
+builder.Services.AddScoped<INutritionsClient, NutritionsClient>();
 
 var appDataConfig = new AppDataConfig();
 var jwtConfig = new JwtConfig();
@@ -47,7 +48,6 @@ builder.Services.AddConfigs(builder.Configuration, opt =>
         
 //DbContext
 var dbContextLoggerFactory = LoggerFactory.Create(cfg => cfg.AddConsole());
-
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))

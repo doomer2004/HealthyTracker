@@ -1,18 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthyTracker.WebAPI", "HealthyTracker.WebAPI\HealthyTracker.WebAPI.csproj", "{E710681D-FB1E-4AC0-9382-EF6E06D78079}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthyTracker.WebAPI", "HealthyTracker.WebAPI\HealthyTracker.WebAPI.csproj", "{E710681D-FB1E-4AC0-9382-EF6E06D78079}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9ADC36D-E1E5-4D55-A857-E9E26AE70098} = {D9ADC36D-E1E5-4D55-A857-E9E26AE70098}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthyTracker.DAL", "HealthyTracker.DAL\HealthyTracker.DAL.csproj", "{14816FC2-55A0-4198-930B-1BE473B9CB45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthyTracker.DAL", "HealthyTracker.DAL\HealthyTracker.DAL.csproj", "{14816FC2-55A0-4198-930B-1BE473B9CB45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthyTracker.Email", "HealthyTracker.Email\HealthyTracker.Email.csproj", "{30640A60-776B-48F6-A410-FDEBD3A97482}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthyTracker.Email", "HealthyTracker.Email\HealthyTracker.Email.csproj", "{30640A60-776B-48F6-A410-FDEBD3A97482}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthyTracker.Mapping", "HealthyTracker.Mapping\HealthyTracker.Mapping.csproj", "{274BD0E4-1C65-4FD0-B4E3-C08ECF958F7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthyTracker.Mapping", "HealthyTracker.Mapping\HealthyTracker.Mapping.csproj", "{274BD0E4-1C65-4FD0-B4E3-C08ECF958F7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthyTracker.Validation", "HealthyTracker.Validation\HealthyTracker.Validation.csproj", "{D9ADC36D-E1E5-4D55-A857-E9E26AE70098}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthyTracker.Validation", "HealthyTracker.Validation\HealthyTracker.Validation.csproj", "{D9ADC36D-E1E5-4D55-A857-E9E26AE70098}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthyTracker.Common", "HealthyTracker.Common\HealthyTracker.Common.csproj", "{B9C60853-E461-479C-9E56-BF04E7D86F15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthyTracker.Common", "HealthyTracker.Common\HealthyTracker.Common.csproj", "{B9C60853-E461-479C-9E56-BF04E7D86F15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthyTracker.BLL", "HealthyTracker.BLL\HealthyTracker.BLL.csproj", "{0A97A2C2-4392-4CDB-A546-BBA9BCA14836}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthyTracker.BLL", "HealthyTracker.BLL\HealthyTracker.BLL.csproj", "{0A97A2C2-4392-4CDB-A546-BBA9BCA14836}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthyTracker.Client.Nutrition", "HealthyTracker.Client.Nutrition\HealthyTracker.Client.Nutrition.csproj", "{CC34B6C1-5440-4D30-8590-A31298D6FE62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,5 +56,15 @@ Global
 		{0A97A2C2-4392-4CDB-A546-BBA9BCA14836}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A97A2C2-4392-4CDB-A546-BBA9BCA14836}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A97A2C2-4392-4CDB-A546-BBA9BCA14836}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC34B6C1-5440-4D30-8590-A31298D6FE62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC34B6C1-5440-4D30-8590-A31298D6FE62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC34B6C1-5440-4D30-8590-A31298D6FE62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC34B6C1-5440-4D30-8590-A31298D6FE62}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {942A88CA-9DBC-434D-8DDD-1347FE31E199}
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HealthyTracker.BLL.Extensions;
 using HealthyTracker.BLL.Services.Auth.Interfaces;
+using HealthyTracker.Client.Nutrition;
 using HealthyTracker.Common.Models;
 using HealthyTracker.Common.Models.Configs;
 using HealthyTracker.Common.Models.DTOs.Auth;
@@ -19,19 +20,28 @@ public class AuthService : AuthServiceBase, IAuthService
     private readonly IMapper _mapper;
     private readonly IEmailSender _emailSender;
     private readonly IUserRegistrationService _userRegistrationService;
+    private readonly INutritionsClient _nutritionsClient;
     
-    
-    public AuthService(UserManager<User> userManager, JwtConfig jwtConfig, ILogger<AuthServiceBase> logger,
-        IMapper mapper, IEmailSender emailSender, IUserRegistrationService userRegistrationService)
+    public AuthService(
+        UserManager<User> userManager,
+        JwtConfig jwtConfig,
+        ILogger<AuthServiceBase> logger,
+        IMapper mapper,
+        IEmailSender emailSender,
+        INutritionsClient nutritionsClient,
+        IUserRegistrationService userRegistrationService)
         : base(userManager, jwtConfig, logger)
     {
         _mapper = mapper;
+        _nutritionsClient = nutritionsClient;
         _emailSender = emailSender;
         _userRegistrationService = userRegistrationService;
     }
 
     public async Task<Either<ErrorDTO, SignUpResponseDTO>> SignUpAsync(SignUpDTO dto)
     {
+        var res = await _nutritionsClient.GetNutritionsByNameAsync(new Client.Nutrition.Models.Requests.GetNutritionsByNameRequest() { Query = "apple" });
+
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user is not null)
             return new AlreadyExistsErrorDTO("User with this email already exists");

@@ -79,6 +79,7 @@ public class GoogleAuthService : AuthServiceBase, IGoogleAuthService
                 return new IdentityErrorDTO("Unable to update user");
             }
         }
+
         return await GenerateAuthResultAsync(user);
     }
 
@@ -109,5 +110,4 @@ public class GoogleAuthService : AuthServiceBase, IGoogleAuthService
         var payload = await GoogleJsonWebSignature.ValidateAsync(tokenResponse.IdToken, settings);
         return payload;
     }
-    
 }

@@ -26,14 +26,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\HealthyTracker.BLL\HealthyTracker.BLL.csproj" />
+      <ProjectReference Include="..\HealthyTracker.Common\HealthyTracker.Common.csproj" />
       <ProjectReference Include="..\HealthyTracker.DAL\HealthyTracker.DAL.csproj" />
       <ProjectReference Include="..\HealthyTracker.Mapping\HealthyTracker.Mapping.csproj" />
       <ProjectReference Include="..\HealthyTracker.Validation\HealthyTracker.Validation.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="AppData\Logs\" />
-        <Folder Include="wwwroot\Uploads\" />
     </ItemGroup>
 
 </Project>

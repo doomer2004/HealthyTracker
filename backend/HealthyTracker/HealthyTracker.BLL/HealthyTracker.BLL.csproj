@@ -18,4 +18,11 @@
       <ProjectReference Include="..\HealthyTracker.Email\HealthyTracker.Email.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\HealthyTracker.Client.Nutrition\HealthyTracker.Client.Nutrition.csproj" />
+      <ProjectReference Include="..\HealthyTracker.Common\HealthyTracker.Common.csproj" />
+      <ProjectReference Include="..\HealthyTracker.DAL\HealthyTracker.DAL.csproj" />
+      <ProjectReference Include="..\HealthyTracker.Email\HealthyTracker.Email.csproj" />
+    </ItemGroup>
+
 </Project>
