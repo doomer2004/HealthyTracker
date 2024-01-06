@@ -5,6 +5,7 @@ using HealthyTracker.Common.Models.Configs;
 using HealthyTracker.Common.Models.DTOs.Auth;
 using HealthyTracker.Common.Models.DTOs.Error;
 using HealthyTracker.DAL.Entities;
+using HealthyTracker.Email.Models;
 using HealthyTracker.Email.Services.Interfaces;
 using LanguageExt;
 using Microsoft.AspNetCore.Identity;

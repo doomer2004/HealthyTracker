@@ -7,6 +7,7 @@ using HealthyTracker.Common.Models.Configs;
 using HealthyTracker.Common.Models.DTOs.Auth;
 using HealthyTracker.Common.Models.DTOs.Error;
 using HealthyTracker.DAL.Entities;
+using HealthyTracker.Email.Models;
 using HealthyTracker.Email.Services.Interfaces;
 using LanguageExt;
 using LanguageExt.Common;
@@ -20,7 +21,6 @@ public class AuthService : AuthServiceBase, IAuthService
     private readonly IMapper _mapper;
     private readonly IEmailSender _emailSender;
     private readonly IUserRegistrationService _userRegistrationService;
-    private readonly INutritionsClient _nutritionsClient;
     
     public AuthService(
         UserManager<User> userManager,
@@ -28,20 +28,17 @@ public class AuthService : AuthServiceBase, IAuthService
         ILogger<AuthServiceBase> logger,
         IMapper mapper,
         IEmailSender emailSender,
-        INutritionsClient nutritionsClient,
         IUserRegistrationService userRegistrationService)
         : base(userManager, jwtConfig, logger)
     {
         _mapper = mapper;
-        _nutritionsClient = nutritionsClient;
         _emailSender = emailSender;
         _userRegistrationService = userRegistrationService;
     }
 
     public async Task<Either<ErrorDTO, SignUpResponseDTO>> SignUpAsync(SignUpDTO dto)
     {
-        var res = await _nutritionsClient.GetNutritionsByNameAsync(new Client.Nutrition.Models.Requests.GetNutritionsByNameRequest() { Query = "apple" });
-
+        
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user is not null)
             return new AlreadyExistsErrorDTO("User with this email already exists");

@@ -1,6 +1,7 @@
 ﻿using HealthyTracker.Client.Nutrition.Extensions;
 using HealthyTracker.Client.Nutrition.Models.Requests;
 using HealthyTracker.Client.Nutrition.Models.Responses;
+using HealthyTracker.Common.Models.Configs;
 using Microsoft.Extensions.Logging;
 using RestSharp;
 
@@ -9,31 +10,30 @@ public class NutritionsClient : INutritionsClient
 {
     private readonly IHttpClientFactory _clientFactory;
     private readonly ILogger<NutritionsClient> _logger;
-
-    // Move this to config or secrets
-    private string AppId = "c79812f0";
-    private string AppKey = "a82e4b76af837b479419027da99c3c10";
-
+    private readonly NutritionsConfig _nutritionsConfig;
     public NutritionsClient(
         IHttpClientFactory clientFactory,
-        ILogger<NutritionsClient> logger)
+        ILogger<NutritionsClient> logger, NutritionsConfig nutritionsConfig)
     {
         _clientFactory = clientFactory;
         _logger = logger;
+        _nutritionsConfig = nutritionsConfig;
     }
+    
+    
 
-    public async Task<GetNutritionsByNameResponse?> GetNutritionsByNameAsync(GetNutritionsByNameRequest request)
+    public async Task<GetNutritionByNameResponse?> GetNutritionsByNameAsync(GetNutritionByNameRequest request)
     {
         try
         {
             var client = _clientFactory.CreateRestClient("NutritionsClient");
 
             var restRequest = new RestRequest("https://trackapi.nutritionix.com/v2/natural/nutrients")
-                .AddHeader("x-app-id", AppId)
-                .AddHeader("x-app-key", AppKey)
+                .AddHeader("x-app-id", _nutritionsConfig.AppId)
+                .AddHeader("x-app-key", _nutritionsConfig.AppKey)
                 .AddBody(request);
 
-            var result = await client.PostAsync<GetNutritionsByNameResponse>(restRequest);
+            var result = await client.PostAsync<GetNutritionByNameResponse>(restRequest);
 
             return result;
         }

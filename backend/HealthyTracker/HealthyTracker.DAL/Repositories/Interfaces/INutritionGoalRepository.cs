@@ -1,6 +1,6 @@
-﻿namespace HealthyTracker.DAL.Repositories.Interfaces;
+﻿using HealthyTracker.DAL.Entities;
+using HealthyTracker.DAL.Repositories.Base;
 
-public interface INutritionGoalRepository
-{
-    
-}
+namespace HealthyTracker.DAL.Repositories.Interfaces;
+
+public interface INutritionGoalRepository : IRepository<NutritionGoal, Guid> { }

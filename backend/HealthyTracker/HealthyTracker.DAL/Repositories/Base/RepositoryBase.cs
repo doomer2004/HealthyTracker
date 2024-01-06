@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HealthyTracker.DAL.Repositories.Base;
 
-public class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
+public abstract class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
     where TEntity : class
     where TKey : IEquatable<TKey>
 

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace HealthyTracker.Client.Nutrition.Models.Responses;
-public class GetNutritionsByNameResponse
+public class GetNutritionByNameResponse
 {
     public List<Food> Foods { get; set; }
 }

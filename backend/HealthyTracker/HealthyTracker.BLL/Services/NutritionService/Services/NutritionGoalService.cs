@@ -4,6 +4,7 @@ using HealthyTracker.Common.Models.DTOs.Calories;
 using HealthyTracker.Common.Models.DTOs.Error;
 using HealthyTracker.DAL.Entities;
 using HealthyTracker.DAL.Repositories;
+using HealthyTracker.DAL.Repositories.Interfaces;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,16 +12,14 @@ namespace HealthyTracker.BLL.Services.NutritionService.Services;
 
 public class NutritionGoalService : INutritionGoalService
 {
-    private readonly NutritionGoalRepository _nutritionGoalRepository;
-    private readonly NutritionRepository _nutritionRepository;
+    private readonly INutritionGoalRepository _nutritionGoalRepository;
     private readonly IMapper _mapper;
 
-    public NutritionGoalService(NutritionGoalRepository nutritionGoalRepository, 
-        IMapper mapper, NutritionRepository nutritionRepository)
+    public NutritionGoalService(INutritionGoalRepository nutritionGoalRepository, 
+        IMapper mapper)
     {
         _nutritionGoalRepository = nutritionGoalRepository;
         _mapper = mapper;
-        _nutritionRepository = nutritionRepository;
     }
     
     public async Task<Either<ErrorDTO, NutritionGoalDTO>> GetAsync(Guid userId)
@@ -46,30 +45,19 @@ public class NutritionGoalService : INutritionGoalService
             await UpdateAsync(userId, dto);
     }
 
-    private async Task<Either<ErrorDTO, NutritionGoalDTO>> AddAsync(Guid userId, NutritionGoalDTO dto)
+    private async Task<bool> AddAsync(Guid userId, NutritionGoalDTO dto)
     {
-        var goal = await _nutritionGoalRepository.Table.FirstOrDefaultAsync(g => g.UserId == userId); ;
-        if (goal is null)
-            return new NotFoundErrorDTO("User with this id does not exist");
-        
-        var nutrition = _mapper.Map<Nutrition>(dto.Nutrition);
-        await _nutritionRepository.Insert(nutrition);
-        var newGoal = new NutritionGoal{ UserId = userId, NutritionId = nutrition.Id };
+        var newGoal = _mapper.Map<NutritionGoal>(dto);
+        newGoal.UserId = userId;
         await _nutritionGoalRepository.Insert(newGoal);
-
-        return _mapper.Map<NutritionGoalDTO>(newGoal);
+        return true;
     }
 
-    private async Task<Either<ErrorDTO, NutritionGoalDTO>> UpdateAsync(Guid userId, NutritionGoalDTO dto)
+    private async Task<bool> UpdateAsync(Guid userId, NutritionGoalDTO dto)
     {
-        var goal = await _nutritionGoalRepository.Table.FirstOrDefaultAsync(g => g.UserId == userId);
-        if (goal is null)
-            return new NotFoundErrorDTO("User with this id does not exist");
+        var nutrition = _mapper.Map<NutritionGoal>(dto);
+        await _nutritionGoalRepository.Insert(nutrition);
         
-        var nutrition = _mapper.Map<Nutrition>(dto.Nutrition);
-        await _nutritionRepository.Table.FirstOrDefaultAsync(u => u.Id == goal.NutritionId);
-        await _nutritionRepository.Update(nutrition);
-        
-        return _mapper.Map<NutritionGoalDTO>(goal);
+        return true;
     }
 }

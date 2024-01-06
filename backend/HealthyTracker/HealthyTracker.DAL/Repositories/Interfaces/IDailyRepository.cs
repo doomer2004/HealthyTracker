@@ -1,6 +1,6 @@
-﻿namespace HealthyTracker.DAL.Repositories.Interfaces;
+﻿using HealthyTracker.DAL.Entities;
+using HealthyTracker.DAL.Repositories.Base;
 
-public interface IDailyRepository 
-{
-    
-}
+namespace HealthyTracker.DAL.Repositories.Interfaces;
+
+public interface IDailyRepository : IRepository<Daily, Guid> { }

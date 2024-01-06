@@ -5,5 +5,5 @@ namespace HealthyTracker.Client.Nutrition;
 
 public interface INutritionsClient
 {
-    public Task<GetNutritionsByNameResponse?> GetNutritionsByNameAsync(GetNutritionsByNameRequest request);
+    public Task<GetNutritionByNameResponse?> GetNutritionsByNameAsync(GetNutritionByNameRequest request);
 }

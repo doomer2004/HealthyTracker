@@ -5,6 +5,8 @@ using HealthyTracker.Common.Models.DTOs.Nutrition;
 using HealthyTracker.Common.Models.DTOs.Product;
 using HealthyTracker.DAL.Entities;
 using HealthyTracker.DAL.Repositories;
+using HealthyTracker.DAL.Repositories.Interfaces;
+using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 
 namespace HealthyTracker.BLL.Services.MealService.Services;
@@ -12,38 +14,49 @@ namespace HealthyTracker.BLL.Services.MealService.Services;
 public class MealService : IMealService
 {
     private readonly IMapper _mapper;
-    private readonly MealRepository _mealRepository;
-    private readonly ProductActualRepository _productRepository;
+    private readonly IMealRepository _mealRepository;
+    private readonly IProductRepository _productRepository;
     
-    public MealService(IMapper mapper, MealRepository mealRepository,
-        ProductActualRepository productRepository)
+    public MealService(IMapper mapper, IMealRepository mealRepository,
+        IProductRepository productRepository)
     {
         _mapper = mapper;
         _mealRepository = mealRepository;
         _productRepository = productRepository;
     }
-
-    public async Task<List<ProductActualDTO>> GetAllProductsAsync(Guid userId, 
-        DateTime date, Guid mealId)
+    
+    public async Task AddMealAsync(Guid userId, Guid dailyId)
     {
-        var products = await _productRepository.Table.Include(p => p.ProductId)
-            .Where(p => p.MealId == mealId).ToListAsync();
+        var meal = new Meal
+        {
+            DailyId = dailyId,
+            Products = new List<Product>(3)
+        };
         
-        return _mapper.Map<List<ProductActualDTO>>(products);
+        await _mealRepository.Insert(meal);
+        return;
     }
 
-    public async Task<GetNutritionDTO> GetNutritionAsync(Guid userId, Guid mealId)
+    public async Task<List<ProductDTO>> GetAllProductsAsync(Guid userId, 
+        DateTime date, Guid mealId)
     {
-        var meals = await _productRepository.Table.Include(m => m.MealId)
-            .Where(p => p.MealId == mealId).ToListAsync();
+        var products = await _productRepository.GetAll();
         
-        var nutrition = new GetNutritionDTO();
+        return _mapper.Map<List<ProductDTO>>(products);
+    }
+
+    public async Task<GetMealNutritionDTO> GetNutritionAsync(Guid userId, Guid mealId)
+    {
+        var meals = await _mealRepository.Table.Include(u => u.Daily)
+            .ThenInclude(d => d.UserId).Where(u => u.Daily.UserId == userId).ToListAsync();
+        
+        var nutrition = new GetMealNutritionDTO();
         foreach (var meal in meals)
         {
-            nutrition.Calories += meal.Product.Nutrition.Calories;
-            nutrition.Protein += meal.Product.Nutrition.Protein;
-            nutrition.Fat += meal.Product.Nutrition.Fat;
-            nutrition.Carbs += meal.Product.Nutrition.Carbs;
+            nutrition.Calories += meal.Products.Sum(p => p.Calories);
+            nutrition.Protein += meal.Products.Sum(p => p.Protein);
+            nutrition.Fat += meal.Products.Sum(p => p.Fat);
+            nutrition.Carbs += meal.Products.Sum(p => p.Carbs);
         }
         
         return nutrition;

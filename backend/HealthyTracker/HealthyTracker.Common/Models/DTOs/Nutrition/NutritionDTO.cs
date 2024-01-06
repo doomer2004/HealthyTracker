@@ -1,15 +1,8 @@
-﻿using System.Security.AccessControl;
+using HealthyTracker.Common.Models.DTOs.User;
 
 namespace HealthyTracker.Common.Models.DTOs.Nutrition;
-
 public class NutritionDTO
 {
-    public float Calories { get; set; }
-    public float Protein { get; set; }
-    public float Fat { get; set; }
-    public float Carbs { get; set; }
-    public float Salt { get; set; }
-    public float Cellulose { get; set; }
-    public float Water { get; set; }
-    public float Caffeine { get; set; } 
+    public UserDTO User { get; set; }
+    
 }

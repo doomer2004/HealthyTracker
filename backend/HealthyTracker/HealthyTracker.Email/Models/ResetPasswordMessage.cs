@@ -1,6 +1,6 @@
-﻿using HealthyTracker.Common.Models.Base;
+﻿using HealthyTracker.Email.Models.Base;
 
-namespace HealthyTracker.Common.Models;
+namespace HealthyTracker.Email.Models;
 
 public class ResetPasswordMessage : EmailMessageBase
 {

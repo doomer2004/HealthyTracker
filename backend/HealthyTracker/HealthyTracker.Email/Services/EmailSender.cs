@@ -5,7 +5,7 @@ using HealthyTracker.Email.Models.Base;
 using HealthyTracker.Email.Services.Interfaces;
 using LanguageExt;
 using Microsoft.Extensions.Logging;
-using EmailMessageBase = HealthyTracker.Common.Models.Base.EmailMessageBase;
+using EmailMessageBase = HealthyTracker.Email.Models.Base.EmailMessageBase;
 
 namespace HealthyTracker.Email.Services;
 
