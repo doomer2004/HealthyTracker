@@ -1,8 +1,18 @@
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using FluentEmail.MailKitSmtp;
 using HealthyTracker.BLL.Extensions;
 using HealthyTracker.BLL.Services.Auth.Auth;
 using HealthyTracker.BLL.Services.Auth.Interfaces;
+using HealthyTracker.BLL.Services.DailyService.Interfaces;
+using HealthyTracker.BLL.Services.DailyService.Services;
+using HealthyTracker.BLL.Services.MealService.Interfaces;
+using HealthyTracker.BLL.Services.MealService.Services;
+using HealthyTracker.BLL.Services.NutritionService.Interfaces;
+using HealthyTracker.BLL.Services.NutritionService.Services;
+using HealthyTracker.BLL.Services.ProductService.Interfaces;
+using HealthyTracker.BLL.Services.ProductService.Services;
 using HealthyTracker.BLL.Services.UserServices.Services;
 using HealthyTracker.Client.Nutrition;
 using HealthyTracker.Common.Models.Configs;
@@ -32,6 +42,8 @@ var appDataConfig = new AppDataConfig();
 var jwtConfig = new JwtConfig();
 var emailConfig = new EmailConfig();
 var googleConfig = new GoogleConfig();
+var nutritionsConfig = new NutritionsConfig();
+//var emailSettings = builder.Configuration.GetSection("EmailConfig");
 
 builder.Services.AddConfigs(builder.Configuration, opt =>
     opt.AddConfig<AppDataConfig>(out appDataConfig, configureOptions: config =>
@@ -44,6 +56,7 @@ builder.Services.AddConfigs(builder.Configuration, opt =>
             configureOptions: config => config.TemplatesPath = config.TemplatesPath.ToAbsolutePath())
         .AddConfig<AuthConfig>()
         .AddConfig<GoogleConfig>(out googleConfig)
+        .AddConfig<NutritionsConfig>(out nutritionsConfig)
         .AddConfig<CallbackUrisConfig>());
         
 //DbContext
@@ -55,11 +68,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 //Repositories
 builder.Services.AddScoped<IDailyRepository, DailyRepository>();
-builder.Services.AddScoped<INutritionRepository, NutritionRepository>();
 builder.Services.AddScoped<IUserRegistrationRepository, UserRegistrationRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IMealRepository, MealRepository>();
 builder.Services.AddScoped<INutritionGoalRepository, NutritionGoalRepository>();
+
 
 //Services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -69,19 +82,25 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<INutritionGoalService, NutritionGoalService>();
+builder.Services.AddScoped<IDailyService, DailyService>();
+builder.Services.AddScoped<IMealService, MealService>();
+
+
 
 //Email
+var client = new SmtpClient();
+client.Credentials = new NetworkCredential(emailConfig.DefaultEmail, emailConfig.Password);
+client.Host = emailConfig.SmtpServer;
+client.Port = 587;
+client.DeliveryMethod = SmtpDeliveryMethod.Network;
+client.EnableSsl = true;
+client.UseDefaultCredentials = false;
+
 builder.Services.AddFluentEmail(emailConfig.DefaultEmail)
-    .AddRazorRenderer(emailConfig.TemplatesPath)
-    .AddMailKitSender(new SmtpClientOptions
-    {
-        Server = emailConfig.SmtpServer,
-        Port = emailConfig.SmtpPort,
-        User = emailConfig.DefaultEmail,
-        Password = emailConfig.Password,
-        UseSsl = false,
-        RequiresAuthentication = true
-    });
+    .AddSmtpSender(client)
+    .AddRazorRenderer(emailConfig.TemplatesPath);
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 

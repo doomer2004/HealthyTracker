@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="251" height="101">
+
+<g id="Logo_HTM">
+<title id="Logo_HTM_Title">HTM</title>
+
+<path id="path1" d="M 8,15 L 10,6 H 181 L 179,15 H 8 Z" fill="rgb(100%, 0%, 0%)" />
+<path id="path_H" d="M 92,26 L 80,72 H 93 L 97.0625,55 H 111.4375 L 107,72 H 120 L 131,26 H 119 L 114.03125,45 H 99.46875 L 104,26 H 92 Z" />
+<path id="path_T" d="M 137,26 L 134.40625,36 H 148.40625 L 139,72 H 152 L 160.59375,36 H 174.59375 L 177,26 H 137 Z" />
+<path id="path_M" d="M 183,26 L 171,72 H 184 L 191.625,40.15625 L 193,72 H 203 L 221,37.5 L 212,72 H 225 L 236,26 H 217 L 201.875,54.96875 L 200,26 H 183 Z" />
+<path id="path2" d="M 130,87 L 131,84 H 225 L 224,87 H 130 Z" fill="rgb(100%, 0%, 0%)" />
+</g>
+
+</svg>

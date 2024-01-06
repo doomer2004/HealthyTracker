@@ -1,0 +1,22 @@
+
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-shadow: none;
+    height: fit-content;
+}
+
+.footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    box-shadow: none;
+}
+
+.footer-text{
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-size: 1.25rem;
+}

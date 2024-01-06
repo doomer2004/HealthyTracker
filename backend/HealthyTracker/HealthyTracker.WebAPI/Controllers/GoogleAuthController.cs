@@ -2,11 +2,11 @@
 using HealthyTracker.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HealthyTracker.Controllers;
+namespace HealthyTracker.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/google-auth")]
-public class GoogleAuthController
+public class GoogleAuthController : ControllerBase
 {
     private readonly IGoogleAuthService _googleAuthService;
     
