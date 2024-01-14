@@ -1,0 +1,25 @@
+.my-nutrition-main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 80vh;
+}
+
+.my-nutrition-calendar{
+	margin-top: 2%;
+}
+
+.my-nutrition-meals{
+	margin-top: 2%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 200px;
+}
+
+.my-nutrition-meal{
+	font-size: 1.5rem;
+	font-family: "Roboto","Helvetica","Arial",sans-serif ;
+	min-width: 400px;
+}
