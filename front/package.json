@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@react-oauth/google": "^0.12.1",
+    "react-circular-slider-svg": "^0.3.0",
+    "react-router-dom": "^6.21.1"
+  },
+  "scripts": {
+    "start": "SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
+    "build": "SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build"
+  }
+}
