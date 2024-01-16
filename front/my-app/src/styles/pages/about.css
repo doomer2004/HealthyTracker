@@ -1,8 +1,3 @@
-p {
-	font-family: "Roboto","Helvetica","Arial",sans-serif ;
-	font-size: 1.25rem;
-}
-
 .about-main{
 	display: flex;
 	flex-direction: column;

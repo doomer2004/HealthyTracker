@@ -17,16 +17,38 @@
     display: flex;
     justify-content: center;
     flex-direction: row;
-    gap :25px ;
+    gap: 25px;
     margin-left: 5%;
 }
 .header-login{
-
     display: flex;
     gap :25px;
-    margin: 0 0 0 45%;
+    justify-self: end;
+    justify-content: end;
+    width: 100%;
+    padding-right: 3%;
 }
 
 .header-logo{
     margin-left: 0;
+}
+
+@media screen and (max-width: 1000px) {
+    .header-logo{
+        width: 125px;
+        height: auto;
+    }
+    .header-nav{
+        gap: 10px;
+    }
+}
+
+
+@media screen and (max-width: 800px) {
+    .header-nav{
+        gap: 5px;
+    }
+    .header-login{
+        gap: 10px;
+    }
 }

@@ -1,9 +1,9 @@
 
 import Home from "./components/pages/Home";
 import React, { FC } from "react";
-import SignIn from "./components/pages/Auth/SignIn";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
 import SignUp from "./components/pages/Auth/SignUp";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import SignIn from "./components/pages/Auth/SignIn";
 import About from "./components/pages/About";
 import NutritionCalculator from "./components/pages/Nutrition/NutritionCalculator";
 import ChangePassword from "./components/pages/Auth/ChangePassword";
@@ -34,7 +34,7 @@ const App: FC = () => {
                     <Route path="/{id}/change-password" element={<ChangePassword />} />
                     <Route path="/{id}/user-account" element={<UserActivation />} />
                     <Route path="/remaind-password" element={<RemaindPassword />} />
-                    <Route path="/{id}/my-nutrition" element={<MyNutrition />} />
+                    <Route path="/id/my-nutrition" element={<MyNutrition />} />
                     <Route path="*" element={<h1 style={{ color: 'red' }} >Not Found</h1>} />
                 </Routes>
             </UserProvider>

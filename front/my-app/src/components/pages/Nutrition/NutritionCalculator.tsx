@@ -7,6 +7,7 @@ import { setFlagsFromString } from 'v8';
 import { calculateCaffeineIntake, calculateDailyCalories, calculateFiberIntake, calculateMacronutrients, calculateSaltIntake, calculateWaterIntake } from './calculationFunctions';
 
 
+
 const NutritionCalculator = () => {
 	const [weight, setWeight] = useState<number>(70); // initial weight
 	const [height, setHeight] = useState<number>(170); // initial height
@@ -57,7 +58,7 @@ const NutritionCalculator = () => {
 	const dailyCalories = calculateDailyCalories(weight, height, age, bodyFatPercentage, gender, parseFloat(activityLevel), goal).toFixed(2);
 	const macronutrients = calculateMacronutrients(weight, height, age, bodyFatPercentage, gender, parseFloat(activityLevel), goal);
 	const waterIntake = calculateWaterIntake(weight, bodyFatPercentage).toFixed(2);
-	const fiberIntake: number = calculateFiberIntake(calculateDailyCalories(weight, height, age, bodyFatPercentage, gender, parseFloat(activityLevel), goal).toFixed(2));
+	const fiberIntake: string = calculateFiberIntake(parseFloat(dailyCalories)).toFixed(2);
 	const saltIntake = calculateSaltIntake(weight, bodyFatPercentage).toFixed(2);
 	const caffeineNormal = calculateCaffeineIntake(weight, false).toFixed(2);
 	const caffeineMax = calculateCaffeineIntake(weight, true).toFixed(2);
