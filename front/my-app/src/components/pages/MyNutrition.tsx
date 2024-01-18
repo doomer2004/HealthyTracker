@@ -21,7 +21,6 @@ import DateAdapter from '@mui/lab/AdapterDateFns';
 import "../../styles/pages/myNutrition.css";
 import { makeStyles } from "@material-ui/core/styles";
 import useUser from "../../hooks/useUser";
-import API from "../../services/api/repository/API";
 import List from '@mui/material/List';
 const MyNutrition = () => {
 

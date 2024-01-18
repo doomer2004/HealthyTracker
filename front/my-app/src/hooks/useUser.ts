@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import User from '../models/user/User';
-import Auth from '../services/api/Auth';
+import { client } from '../services/api';
 
 const useUser = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -10,7 +10,8 @@ const useUser = () => {
         setLoading(true);
 
         const fetchUser = async () => {
-            const user = await Auth.me();
+            const user = await client.me();
+            // @ts-ignore
             user ? setUser(user) : logout();
         };
 

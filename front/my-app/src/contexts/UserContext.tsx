@@ -1,6 +1,6 @@
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import User from "../models/user/User";
-import Auth from "../services/api/Auth";
+import { client } from '../services/api';
 
 
 interface UserContextProps {
@@ -34,9 +34,11 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 
 	const refreshUser = async (): Promise<User | null> => {
 		setLoading(true);
-		const user = await Auth.me();
+		const user = await client.me();
 		setLoading(false);
+		// @ts-ignore
 		setUser(user ?? null);
+		// @ts-ignore
 		return user ?? null;
 	}
 
