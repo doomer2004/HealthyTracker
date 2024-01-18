@@ -2,13 +2,13 @@
 
 namespace HealthyTracker.Common.Models.DTOs.Error;
 
-public class ErrorDTO
+public class ErrorDto
 {
-    public string Massage { get; set; }
+    public string Message { get; set; }
     public ErrorCode Error { get; set; }
-    public ErrorDTO(ErrorCode error, string message)
+    public ErrorDto(ErrorCode error, string message)
     {
-        Massage = message;
+        Message = message;
         Error = error;
     }
 }

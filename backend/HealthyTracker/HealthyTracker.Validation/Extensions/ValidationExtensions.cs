@@ -10,7 +10,7 @@ namespace HealthyTracker.Validation.Extensions;
 
 public static class ValidationExtensions
 {
-    public static ErrorDTO ToErrorDTO(this ValidationResult result)
+    public static ErrorDto ToErrorDTO(this ValidationResult result)
     {
         return new ValidationFailedErrorDTO(result.ToDictionary());
     }

@@ -7,8 +7,8 @@ namespace HealthyTracker.BLL.Services.Auth.Interfaces;
 
 public interface IUserService
 {
-    Task<Either<ErrorDTO, UserDTO>> GetByIdAsync(Guid id, string apiUrl);
-    Task<Either<ErrorDTO, UserDTO>> UpdateUserAsync(Guid id, UpdateUserDTO dto, string apiUrl);
-    Task<Option<ErrorDTO>> UploadAvatarAsync(Guid userId, IFormFile stream);
-    Task<Option<ErrorDTO>> DeleteAvatarAsync(Guid userId);
+    Task<Either<ErrorDto, UserDTO>> GetByIdAsync(Guid id, string apiUrl);
+    Task<Either<ErrorDto, UserDTO>> UpdateUserAsync(Guid id, UpdateUserDTO dto, string apiUrl);
+    Task<Option<ErrorDto>> UploadAvatarAsync(Guid userId, IFormFile stream);
+    Task<Option<ErrorDto>> DeleteAvatarAsync(Guid userId);
 }

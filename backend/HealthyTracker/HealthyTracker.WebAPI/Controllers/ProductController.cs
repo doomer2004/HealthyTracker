@@ -1,5 +1,6 @@
 ﻿using HealthyTracker.BLL.Services.ProductService.Interfaces;
 using HealthyTracker.BLL.Services.ProductService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthyTracker.WebAPI.Controllers;
@@ -17,6 +18,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> AddProduct(string name, int volume, Guid mealId)
     {
         try
@@ -31,6 +33,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize]
     public async Task<IActionResult> UpdateProduct(Guid productId, int volume)
     {
         try
@@ -45,6 +48,8 @@ public class ProductController : ControllerBase
     }
 
     [HttpDelete]
+    
+    [Authorize]
     public async Task<IActionResult> DeleteProduct(Guid productId)
     {
         try

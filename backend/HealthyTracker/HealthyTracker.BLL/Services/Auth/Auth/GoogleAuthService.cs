@@ -32,7 +32,7 @@ public class GoogleAuthService : AuthServiceBase, IGoogleAuthService
         _mapper = mapper;
     }
 
-    public async Task<Either<ErrorDTO, AuthSuccessDTO>> SignUpAsync(string authorizationCode)
+    public async Task<Either<ErrorDto, AuthSuccessDTO>> SignUpAsync(string authorizationCode)
     {
         var payload = await GetGooglePayloadAsync(authorizationCode);
 
@@ -55,7 +55,7 @@ public class GoogleAuthService : AuthServiceBase, IGoogleAuthService
         return await GenerateAuthResultAsync(user);
     }
 
-    public async Task<Either<ErrorDTO, AuthSuccessDTO>> SignInAsync(string authorizationCode)
+    public async Task<Either<ErrorDto, AuthSuccessDTO>> SignInAsync(string authorizationCode)
     {
         var payload = await GetGooglePayloadAsync(authorizationCode);
         var user = await _userManager.FindByEmailAsync(payload.Email);

@@ -32,17 +32,17 @@ public abstract class AuthServiceBase
         _logger = logger;
     }
 
-    protected async Task<Either<ErrorDTO, AuthSuccessDTO>> GenerateAuthResultAsync(User user)
+    protected async Task<Either<ErrorDto, AuthSuccessDTO>> GenerateAuthResultAsync(User user)
     {
         var options = await GenerateTokenAsync(user);
         var accessToken = await GenerateJwtTokenAsync(user);
-        return options.Match<Either<ErrorDTO, AuthSuccessDTO>>(
+        return options.Match<Either<ErrorDto, AuthSuccessDTO>>(
             Right: refreshToken => new AuthSuccessDTO
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             },
-            Left: errorCode => new ErrorDTO(errorCode, "Unable to generate refresh token")
+            Left: errorCode => new ErrorDto(errorCode, "Unable to generate refresh token")
         );
     }
 

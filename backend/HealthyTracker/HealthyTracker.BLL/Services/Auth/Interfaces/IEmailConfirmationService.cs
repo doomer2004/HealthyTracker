@@ -6,6 +6,6 @@ namespace HealthyTracker.BLL.Services.Auth.Interfaces;
 
 public interface IEmailConfirmationService
 {
-    Task<Either<ErrorDTO, AuthSuccessDTO>> ConfirmEmailAsync(ConfirmEmailDTO dto);
-    Task<Option<ErrorDTO>> ResendConfirmationCodeAsync(ResendConfirmationUrlDTO dto);
+    Task<Either<ErrorDto, AuthSuccessDTO>> ConfirmEmailAsync(ConfirmEmailDTO dto);
+    Task<Option<ErrorDto>> ResendConfirmationCodeAsync(ResendConfirmationUrlDTO dto);
 }

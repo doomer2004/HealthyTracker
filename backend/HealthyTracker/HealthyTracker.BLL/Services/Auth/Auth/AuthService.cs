@@ -36,7 +36,7 @@ public class AuthService : AuthServiceBase, IAuthService
         _userRegistrationService = userRegistrationService;
     }
 
-    public async Task<Either<ErrorDTO, SignUpResponseDTO>> SignUpAsync(SignUpDTO dto)
+    public async Task<Either<ErrorDto, SignUpResponseDto>> SignUpAsync(SignUpDTO dto)
     {
         
         var user = await _userManager.FindByEmailAsync(dto.Email);
@@ -54,17 +54,17 @@ public class AuthService : AuthServiceBase, IAuthService
         }
 
         var generateUrl = await _userRegistrationService.GenerateEmailConfirmationUrlAsync(user.Id);
-        return await generateUrl.Match<Task<Either<ErrorDTO, SignUpResponseDTO>>>(
+        return await generateUrl.Match<Task<Either<ErrorDto, SignUpResponseDto>>>(
             Right: async url =>
             {
                 var emailSent = await _emailSender.SendEmailAsync(user.Email!,
                     new EmailConfirmationMessage() {Url = url});
 
-                return emailSent.Match<Either<ErrorDTO, SignUpResponseDTO>>(
+                return emailSent.Match<Either<ErrorDto, SignUpResponseDto>>(
                     None: () =>
                     {
                         _logger.LogInformation("Email confirmation url sent to user {0}", user.Id);
-                        return new SignUpResponseDTO {UserId = user.Id};
+                        return new SignUpResponseDto {UserId = user.Id};
                     },
                     Some: error =>
                     {
@@ -77,12 +77,12 @@ public class AuthService : AuthServiceBase, IAuthService
                 _logger.LogError("Unable to generate email confirmation url for user {0}, error: {1}", user.Id,
                     error.Message);
 
-                return Task.FromResult<Either<ErrorDTO, SignUpResponseDTO>>(
+                return Task.FromResult<Either<ErrorDto, SignUpResponseDto>>(
                     new IncorrectParametersErrorDTO(error.Message));
             });
     }
 
-    public async Task<Either<ErrorDTO, AuthSuccessDTO>> SignInAsync(SignInDTO dto)
+    public async Task<Either<ErrorDto, AuthSuccessDTO>> SignInAsync(SignInDTO dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user is null)

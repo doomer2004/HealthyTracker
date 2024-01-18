@@ -6,6 +6,6 @@ namespace HealthyTracker.BLL.Services.Auth.Interfaces;
 
 public interface IGoogleAuthService
 {
-    Task<Either<ErrorDTO, AuthSuccessDTO>> SignUpAsync(string authorizationCode);
-    Task<Either<ErrorDTO, AuthSuccessDTO>> SignInAsync(string authorizationCode);
+    Task<Either<ErrorDto, AuthSuccessDTO>> SignUpAsync(string authorizationCode);
+    Task<Either<ErrorDto, AuthSuccessDTO>> SignInAsync(string authorizationCode);
 }

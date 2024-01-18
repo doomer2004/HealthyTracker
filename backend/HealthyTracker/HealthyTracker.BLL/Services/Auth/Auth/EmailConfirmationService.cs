@@ -25,7 +25,7 @@ public class EmailConfirmationService : AuthServiceBase, IEmailConfirmationServi
         _userRegistrationService = userRegistrationService;
     }
 
-    public async Task<Either<ErrorDTO, AuthSuccessDTO>> ConfirmEmailAsync(ConfirmEmailDTO dto)
+    public async Task<Either<ErrorDto, AuthSuccessDTO>> ConfirmEmailAsync(ConfirmEmailDTO dto)
     {
         var user = await _userManager.FindByIdAsync(dto.UserId.ToString());
         if (user is null)
@@ -35,7 +35,7 @@ public class EmailConfirmationService : AuthServiceBase, IEmailConfirmationServi
             return new IncorrectParametersErrorDTO("Email is already confirmed");
         
         var option = await _userRegistrationService.CanConfirmEmailAsync(dto.UserId, dto.Url);
-        return await option.Match<Task<Either<ErrorDTO, AuthSuccessDTO>>>(
+        return await option.Match<Task<Either<ErrorDto, AuthSuccessDTO>>>(
             None: async () =>
             {
                 user.EmailConfirmed = true;
@@ -52,12 +52,12 @@ public class EmailConfirmationService : AuthServiceBase, IEmailConfirmationServi
             Some: error =>
             {
                 _logger.LogError("Unable to confirm email for user: {0}, error: {1}", user.Id, error.Message);
-                return Task.FromResult<Either<ErrorDTO, AuthSuccessDTO>>(
+                return Task.FromResult<Either<ErrorDto, AuthSuccessDTO>>(
                     new IncorrectParametersErrorDTO(error.Message));
             });
     }
 
-    public async Task<Option<ErrorDTO>> ResendConfirmationCodeAsync(ResendConfirmationUrlDTO dto)
+    public async Task<Option<ErrorDto>> ResendConfirmationCodeAsync(ResendConfirmationUrlDTO dto)
     {
         var user = await _userManager.FindByIdAsync(dto.UserId.ToString());
         if (user is null)
@@ -65,17 +65,17 @@ public class EmailConfirmationService : AuthServiceBase, IEmailConfirmationServi
 
         var result = await _userRegistrationService.RegenerateEmailConfirmationUrlAsync(dto.UserId);
         
-        return await result.Match<Task<Option<ErrorDTO>>>(
+        return await result.Match<Task<Option<ErrorDto>>>(
             Right: async url =>
             {
                 var emailSent = await _emailSender.SendEmailAsync(user.Email!,
                     new EmailConfirmationMessage { Url = url });
 
-                return emailSent.Match<Option<ErrorDTO>>(
+                return emailSent.Match<Option<ErrorDto>>(
                     None: () =>
                     {
                         _logger.LogInformation("Email confirmation code sent to user {0}", user.Id);
-                        return Option<ErrorDTO>.None;
+                        return Option<ErrorDto>.None;
                     },
                     Some: error =>
                     {
@@ -89,7 +89,7 @@ public class EmailConfirmationService : AuthServiceBase, IEmailConfirmationServi
                 _logger.LogError("Unable to generate email confirmation code for user {0}, error: {1}", user.Id,
                     error.Message);
 
-                return Task.FromResult<Option<ErrorDTO>>(new IncorrectParametersErrorDTO(error.Message));
+                return Task.FromResult<Option<ErrorDto>>(new IncorrectParametersErrorDTO(error.Message));
             });
     }
 }

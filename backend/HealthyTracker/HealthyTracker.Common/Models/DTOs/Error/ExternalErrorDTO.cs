@@ -2,7 +2,7 @@
 
 namespace HealthyTracker.Common.Models.DTOs.Error;
 
-public class ExternalErrorDTO : ErrorDTO
+public class ExternalErrorDTO : ErrorDto
 {
     public ExternalErrorDTO(string message) : base(ErrorCode.ExternalError, message)
     {

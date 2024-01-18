@@ -6,6 +6,6 @@ namespace HealthyTracker.BLL.Services.Auth.Interfaces;
 
 public interface IAuthService
 {
-    Task<Either<ErrorDTO, SignUpResponseDTO>> SignUpAsync(SignUpDTO dto);
-    Task<Either<ErrorDTO, AuthSuccessDTO>> SignInAsync(SignInDTO dto);
+    Task<Either<ErrorDto, SignUpResponseDto>> SignUpAsync(SignUpDTO dto);
+    Task<Either<ErrorDto, AuthSuccessDTO>> SignInAsync(SignInDTO dto);
 }

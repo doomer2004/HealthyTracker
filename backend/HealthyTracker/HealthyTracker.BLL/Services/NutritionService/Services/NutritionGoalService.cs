@@ -22,7 +22,7 @@ public class NutritionGoalService : INutritionGoalService
         _mapper = mapper;
     }
     
-    public async Task<Either<ErrorDTO, NutritionGoalDTO>> GetAsync(Guid userId)
+    public async Task<Either<ErrorDto, NutritionGoalDTO>> GetAsync(Guid userId)
     {
         var goal = await _nutritionGoalRepository.Table.Include(u => u.User)
             .FirstOrDefaultAsync(u => u.UserId == userId);

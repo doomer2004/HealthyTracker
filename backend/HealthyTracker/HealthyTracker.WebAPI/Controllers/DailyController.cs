@@ -1,4 +1,6 @@
-﻿using HealthyTracker.BLL.Services.DailyService.Interfaces;
+﻿using System.Security.Claims;
+using HealthyTracker.BLL.Services.DailyService.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthyTracker.WebAPI.Controllers;
@@ -16,18 +18,21 @@ public class DailyController : ControllerBase
     }
     
     [HttpGet("check-daily")]
-    public async Task<IActionResult> CheckDaily(Guid userId)
+    [Authorize]
+    public async Task<IActionResult> CheckDaily()
     {
+        var value = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (value == null) return BadRequest();
+        var userId = Guid.Parse(value);
+        
         var result = await _dailyService.CheckDailyAsync(userId);
 
-        if (result == true)
+        if (result)
         {
             return Ok();
         }
-        else
-        {
-            return BadRequest();
-        }
+
+        return BadRequest();
     }
     
 }

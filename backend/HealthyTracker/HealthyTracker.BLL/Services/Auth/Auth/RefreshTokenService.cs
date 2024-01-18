@@ -22,7 +22,7 @@ public class RefreshTokenService : AuthServiceBase, IRefreshTokenService
         _tokenValidationParameters = tokenValidationParameters;
     }
 
-    public async Task<Either<ErrorDTO, AuthSuccessDTO>> RefreshTokenAsync(RefreshTokenDTO dto)
+    public async Task<Either<ErrorDto, AuthSuccessDTO>> RefreshTokenAsync(RefreshTokenDTO dto)
     {
         var option = GetPrincipalFromToken(dto.AccessToken);
         return await option.MatchAsync(

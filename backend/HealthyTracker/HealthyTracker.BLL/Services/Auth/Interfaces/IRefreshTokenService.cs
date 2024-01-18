@@ -6,5 +6,5 @@ namespace HealthyTracker.BLL.Services.Auth.Interfaces;
 
 public interface IRefreshTokenService
 {
-    Task<Either<ErrorDTO, AuthSuccessDTO>> RefreshTokenAsync(RefreshTokenDTO dto);
+    Task<Either<ErrorDto, AuthSuccessDTO>> RefreshTokenAsync(RefreshTokenDTO dto);
 }

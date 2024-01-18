@@ -28,7 +28,7 @@ public class PasswordService : AuthServiceBase, IPasswordService
         _urisConfig = urisConfig;
     }
 
-    public async Task<Option<ErrorDTO>> ChangePasswordAsync(Guid userId, ChangePasswordDTO dto)
+    public async Task<Option<ErrorDto>> ChangePasswordAsync(Guid userId, ChangePasswordDTO dto)
     {
         var user = await _userManager.FindByEmailAsync(userId.ToString());
         if (user is null)
@@ -52,11 +52,11 @@ public class PasswordService : AuthServiceBase, IPasswordService
         var emailSent = await _emailSender.SendEmailAsync(user.Email!,
             new PasswordChangedMessage {UserName = user.DisplayName});
 
-        return emailSent.Match<Option<ErrorDTO>>(
+        return emailSent.Match<Option<ErrorDto>>(
             None: () =>
             {
                 _logger.LogInformation("Password changed email sent to user: {0}", user.Id);
-                return Option<ErrorDTO>.None;
+                return Option<ErrorDto>.None;
             },
             Some: error =>
             {
@@ -66,7 +66,7 @@ public class PasswordService : AuthServiceBase, IPasswordService
         );
     }
 
-    public async Task<Option<ErrorDTO>> ForgotPasswordAsync(ForgotPasswordDTO dto)
+    public async Task<Option<ErrorDto>> ForgotPasswordAsync(ForgotPasswordDTO dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user is null)
@@ -82,11 +82,11 @@ public class PasswordService : AuthServiceBase, IPasswordService
         var emailSent = await _emailSender.SendEmailAsync(user.Email!,
             new ResetPasswordMessage { UserName = user.DisplayName, ResetPasswordUrl = callbackUrl });
 
-        return emailSent.Match<Option<ErrorDTO>>(
+        return emailSent.Match<Option<ErrorDto>>(
             None: () =>
             {
                 _logger.LogInformation("Forgot password email sent to user: {0}", user.Id);
-                return Option<ErrorDTO>.None;
+                return Option<ErrorDto>.None;
             },
             Some: error =>
             {
@@ -96,7 +96,7 @@ public class PasswordService : AuthServiceBase, IPasswordService
         );
     }
 
-    public async Task<Option<ErrorDTO>> ResetPasswordAsync(ResetPasswordDTO dto)
+    public async Task<Option<ErrorDto>> ResetPasswordAsync(ResetPasswordDTO dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user is null)
@@ -120,11 +120,11 @@ public class PasswordService : AuthServiceBase, IPasswordService
         var emailSent = await _emailSender.SendEmailAsync(user.Email!,
             new PasswordChangedMessage { UserName = user.DisplayName });
         
-        return emailSent.Match<Option<ErrorDTO>>(
+        return emailSent.Match<Option<ErrorDto>>(
             None: () =>
             {
                 _logger.LogInformation("Password changed email sent to user: {0}", user.Id);
-                return Option<ErrorDTO>.None;
+                return Option<ErrorDto>.None;
             },
             Some: error =>
             {
@@ -134,7 +134,7 @@ public class PasswordService : AuthServiceBase, IPasswordService
         );
     }
 
-    public async Task<Option<ErrorDTO>> AddPasswordAsync(Guid userId, AddPasswordDTO dto)
+    public async Task<Option<ErrorDto>> AddPasswordAsync(Guid userId, AddPasswordDTO dto)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
         if (user is null)
@@ -151,6 +151,6 @@ public class PasswordService : AuthServiceBase, IPasswordService
         }
         
         _logger.LogInformation("Password added to user: {0}", user.Id);
-        return Option<ErrorDTO>.None;
+        return Option<ErrorDto>.None;
     }
 }

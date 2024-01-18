@@ -1,9 +1,12 @@
 ﻿using System.Net;
 using HealthyTracker.BLL.Services.Auth.Interfaces;
 using HealthyTracker.Common.Models.DTOs.Auth;
+using HealthyTracker.Common.Models.DTOs.Error;
 using HealthyTracker.Extensions;
 using HealthyTracker.Validation;
 using HealthyTracker.Validation.Extensions;
+using LanguageExt;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthyTracker.Controllers;
@@ -32,17 +35,31 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("sign-up")]
+    [ProducesResponseType(typeof(Either<ErrorDto, SignUpResponseDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ValidationFailedErrorDTO), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> SignUp(SignUpDTO dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
+
         if (!validationResult.IsValid)
+        {
             return BadRequest(validationResult.ToErrorDTO());
+        }
 
         var result = await _authService.SignUpAsync(dto);
         return result.ToActionResult();
     }
 
+    [HttpPost("me")]
+    [ProducesResponseType(typeof(string), 200)]
+    public async Task<IActionResult> Me()
+    {
+        return Ok("Hello");
+    }
+    
     [HttpPost("confirm-email")]
+    [ProducesResponseType(typeof(ValidationFailedErrorDTO), (int) HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(Either<ErrorDto, AuthSuccessDTO>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> ConfirmEmail(ConfirmEmailDTO dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
@@ -54,6 +71,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("sign-in")]
+    [ProducesResponseType(typeof(Either<ErrorDto, AuthSuccessDTO>), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ValidationFailedErrorDTO), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> SignIn(SignInDTO dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
@@ -65,6 +84,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("refresh-token")]
+    [ProducesResponseType(typeof(Either<ErrorDto, AuthSuccessDTO>), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ValidationFailedErrorDTO), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> RefreshToken(RefreshTokenDTO dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
@@ -76,6 +97,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("resend-confirmation-code")]
+    [ProducesResponseType(typeof(ValidationFailedErrorDTO), (int) HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(Either<ErrorDto, AuthSuccessDTO>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> ResendConfirmationUrl(ResendConfirmationUrlDTO dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
@@ -87,6 +110,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("forgot-password")]
+    [ProducesResponseType(typeof(ValidationFailedErrorDTO), (int) HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(Option<ErrorDto>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);
@@ -98,6 +123,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("reset-password")]
+    [ProducesResponseType(typeof(ValidationFailedErrorDTO), (int) HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(Option<ErrorDto>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> ResetPassword(ResetPasswordDTO dto)
     {
         var validationResult = await _validator.ValidateAsync(dto);

@@ -6,7 +6,7 @@ namespace HealthyTracker.BLL.Services.NutritionService.Interfaces;
 
 public interface INutritionGoalService
 {
-    Task<Either<ErrorDTO, NutritionGoalDTO>> GetAsync(Guid userId);
+    Task<Either<ErrorDto, NutritionGoalDTO>> GetAsync(Guid userId);
     
     Task SaveAsync(Guid userId, NutritionGoalDTO dto);
 

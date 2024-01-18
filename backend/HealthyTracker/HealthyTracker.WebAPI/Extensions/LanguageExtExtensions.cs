@@ -6,7 +6,7 @@ namespace HealthyTracker.Extensions;
 
 public static class LanguageExtExtensions
 {
-    public static IActionResult ToActionResult<T>(this Either<ErrorDTO, T> either)
+    public static IActionResult ToActionResult<T>(this Either<ErrorDto, T> either)
     {
         return either.Match<IActionResult>(
             Left: error => new BadRequestObjectResult(error),
@@ -14,7 +14,7 @@ public static class LanguageExtExtensions
         );
     }
 
-    public static IActionResult ToActionResult(this Option<ErrorDTO> either)
+    public static IActionResult ToActionResult(this Option<ErrorDto> either)
     {
         return either.Match<IActionResult>(
             Some: error => new BadRequestObjectResult(error),
