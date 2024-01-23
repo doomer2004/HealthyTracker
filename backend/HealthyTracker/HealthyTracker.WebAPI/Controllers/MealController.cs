@@ -7,6 +7,7 @@ namespace HealthyTracker.WebAPI.Controllers;
 
 
 [ApiController]
+[Authorize]
 [Route("api/meal")]
 public class MealController : ControllerBase
 {
@@ -18,10 +19,17 @@ public class MealController : ControllerBase
     }
 
     [HttpGet("user-meal")]
-    public async Task<IActionResult> GetUserMeal(Guid userId)
+    public async Task<IActionResult> GetUserMeal(Guid? userId)
     {
-        var result = await _mealService.GetUserMealAsync(userId);
-        return Ok();
+        var value = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (value != null)
+        {
+            var realUserId = Guid.Parse(value);
+            var result = await _mealService.GetUserMealAsync(realUserId);
+            return Ok();
+        }
+
+        return Unauthorized();
     }
 
     [HttpGet("all-products")]

@@ -36,3 +36,9 @@ const UserAccount = () => {
 }
 
 export default UserAccount
+
+//TODO make logout works
+//TODO make login works
+//TODO make check is user logged in on goal page
+//TODO Make handler for 401 with redirect on login
+//TODO OPTIONAL remove all trnasfer of user Id from models urls ect

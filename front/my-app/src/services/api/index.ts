@@ -7,7 +7,7 @@ const axios = new Axios({
   }
 })
 
-export const client = new Client('https://localhost:7243', axios);
+export const client = new Client('http://localhost:7243', axios);
 
 // import axios from 'axios';
 // const axiosConfig = {
@@ -18,4 +18,4 @@ export const client = new Client('https://localhost:7243', axios);
 
 // const axiosInstance: AxiosInstance = axios.create(axiosConfig);
 
-// export const client = new Client('https://localhost:7243', axiosInstance);
+// export const client = new Client('http://localhost:7243', axiosInstance);

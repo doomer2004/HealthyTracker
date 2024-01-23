@@ -182,6 +182,15 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// builder.Services.AddCors(options => 
+// { 
+//     options.AddDefaultPolicy( 
+//         policy => 
+//         { 
+//             policy.WithOrigins("http://localhost:3000", 
+//                 "https://localhost:3000"); 
+//         }); 
+// });
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

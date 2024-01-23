@@ -10,10 +10,7 @@ import { CallToAction } from "@mui/icons-material";
 
 interface MenuAvatarProps {
 	onSignOut: () => void;
-	onSettings: () => void;
 	onProfile: () => void;
-	onAdd: () => void;
-	onMyFundraising: () => void;
 }
 
 const MenuAvatar = (props: MenuAvatarProps) => {
@@ -79,28 +76,9 @@ const MenuAvatar = (props: MenuAvatarProps) => {
 					Profile
 				</MenuItem>
 				<Divider />
-				<MenuItem onClick={props.onAdd}>
-					<ListItemIcon>
-						<AddIcon fontSize="small" />
-					</ListItemIcon>
-					Add fundraising
-				</MenuItem>
-				<MenuItem onClick={props.onMyFundraising}>
-					<ListItemIcon>
-						<CallToAction />
-					</ListItemIcon>
-					My fundraising
-				</MenuItem>
-				<Divider />
 				<MenuItem>
 					<ListItemIcon>
 					</ListItemIcon>
-				</MenuItem>
-				<MenuItem onClick={props.onSettings}>
-					<ListItemIcon>
-						<Settings fontSize="small" />
-					</ListItemIcon>
-					Settings
 				</MenuItem>
 				<MenuItem onClick={props.onSignOut}>
 					<ListItemIcon>

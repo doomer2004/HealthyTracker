@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import Layout from '../../layout/Layout';
 import { Box, Button, Card, FormControl, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, Slider, TextField, Typography } from '@mui/material';
 import "./../../../styles/pages/nutritionCalculator.css";
@@ -6,10 +6,16 @@ import NutritionInput from './NutritionInput';
 import { setFlagsFromString } from 'v8';
 import { calculateCaffeineIntake, calculateDailyCalories, calculateFiberIntake, calculateMacronutrients, calculateSaltIntake, calculateWaterIntake } from './calculationFunctions';
 import { client } from '../../../services/api';
+import { UserProvider, useUser } from "../../../contexts/UserContext";
 
 
 
 const NutritionCalculator = () => {
+	const { user, loading, updateUser, refreshUser } = useUser();
+	useEffect(() => {
+		refreshUser();
+	}, []);
+
 	const [weight, setWeight] = useState<number>(70); // initial weight
 	const [height, setHeight] = useState<number>(170); // initial height
 	const [age, setAge] = useState<number>(25); // initial age
@@ -65,13 +71,18 @@ const NutritionCalculator = () => {
 	const caffeineMax = calculateCaffeineIntake(weight, true).toFixed(2);
 
 	const save = async () => {
-		await client.nutritionGoalPOST({
-			calories: Number(dailyCalories),
-			protein: macronutrients.protein,
-			fat: macronutrients.fat,
-			userId: 'B4D6DFF1-42E8-4DA4-7290-08DC1B865422',
-			carbs: macronutrients.carbohydrates,
-		})
+		if (user != null) {
+			await client.nutritionGoalPOST({
+				calories: Number(dailyCalories),
+				protein: macronutrients.protein,
+				fat: macronutrients.fat,
+				userId: 'B4D6DFF1-42E8-4DA4-7290-08DC1B865422',
+				carbs: macronutrients.carbohydrates,
+			})
+		}
+		else {
+			// redirect to login
+		}
 	}
 
 	return (

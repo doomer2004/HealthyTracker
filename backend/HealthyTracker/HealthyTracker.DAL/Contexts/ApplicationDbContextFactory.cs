@@ -9,7 +9,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         optionsBuilder.UseSqlServer(
-            "Server=localhost;Database=HealthyTracker;Trusted_Connection=True;TrustServerCertificate=True");
+            "Server=localhost;Database=HealthyTrackerDb;Trusted_Connection=True;TrustServerCertificate=True");
         return new ApplicationDbContext(optionsBuilder.Options);
     }
 }

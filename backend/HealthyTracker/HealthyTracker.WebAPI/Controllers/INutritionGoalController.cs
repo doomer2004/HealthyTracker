@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HealthyTracker.WebAPI.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/nutrition-goal")]
 public class NutritionGoalController : ControllerBase
 {
@@ -21,9 +22,9 @@ public class NutritionGoalController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> UpdateGoal(NutritionGoalDTO dto)
     {
-        // var value = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var value = dto.UserId.ToString();
-        if (value == null) return BadRequest();
+        var value = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (value == null)
+            return Unauthorized();
         var userId = Guid.Parse(value);
         await _nutritionGoalService.SaveAsync(userId, dto);
         return Ok();

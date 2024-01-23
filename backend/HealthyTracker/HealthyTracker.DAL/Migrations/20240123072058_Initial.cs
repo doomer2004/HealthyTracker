@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HealthyTracker.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,9 +30,11 @@ namespace HealthyTracker.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -52,37 +54,6 @@ namespace HealthyTracker.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Meal",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MealType = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Meal", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Nutrition",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Calories = table.Column<float>(type: "real", nullable: false),
-                    Protein = table.Column<float>(type: "real", nullable: false),
-                    Fat = table.Column<float>(type: "real", nullable: false),
-                    Carbs = table.Column<float>(type: "real", nullable: false),
-                    Salt = table.Column<float>(type: "real", nullable: false),
-                    Cellulose = table.Column<float>(type: "real", nullable: false),
-                    Water = table.Column<float>(type: "real", nullable: false),
-                    Caffeine = table.Column<float>(type: "real", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Nutrition", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -197,7 +168,10 @@ namespace HealthyTracker.DAL.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NutritionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Calories = table.Column<float>(type: "real", nullable: false),
+                    Protein = table.Column<float>(type: "real", nullable: false),
+                    Fat = table.Column<float>(type: "real", nullable: false),
+                    Carbs = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -208,12 +182,6 @@ namespace HealthyTracker.DAL.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CalorieGoal_Nutrition_NutritionId",
-                        column: x => x.NutritionId,
-                        principalTable: "Nutrition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,9 +189,9 @@ namespace HealthyTracker.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NormIsFulfilled = table.Column<bool>(type: "bit", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NutritionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -234,10 +202,45 @@ namespace HealthyTracker.DAL.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRegistrations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ExpiresAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    IsUrlRegenerated = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRegistrations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CaloriesConsumed_Nutrition_NutritionId",
-                        column: x => x.NutritionId,
-                        principalTable: "Nutrition",
+                        name: "FK_UserRegistrations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Meal",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DailyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Meal", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Meal_CaloriesConsumed_DailyId",
+                        column: x => x.DailyId,
+                        principalTable: "CaloriesConsumed",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -248,41 +251,25 @@ namespace HealthyTracker.DAL.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NutritionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Volume = table.Column<int>(type: "int", nullable: false),
+                    Calories = table.Column<float>(type: "real", nullable: false),
+                    Protein = table.Column<float>(type: "real", nullable: false),
+                    Fat = table.Column<float>(type: "real", nullable: false),
+                    Carbs = table.Column<float>(type: "real", nullable: false),
+                    Salt = table.Column<float>(type: "real", nullable: false),
+                    Cellulose = table.Column<float>(type: "real", nullable: false),
+                    Water = table.Column<float>(type: "real", nullable: false),
+                    Caffeine = table.Column<float>(type: "real", nullable: false),
+                    MealId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Food", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Food_Nutrition_NutritionId",
-                        column: x => x.NutritionId,
-                        principalTable: "Nutrition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FoodMeal",
-                columns: table => new
-                {
-                    FoodsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MealsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FoodMeal", x => new { x.FoodsId, x.MealsId });
-                    table.ForeignKey(
-                        name: "FK_FoodMeal_Food_FoodsId",
-                        column: x => x.FoodsId,
-                        principalTable: "Food",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FoodMeal_Meal_MealsId",
-                        column: x => x.MealsId,
+                        name: "FK_Food_Meal_MealId",
+                        column: x => x.MealId,
                         principalTable: "Meal",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -325,19 +312,9 @@ namespace HealthyTracker.DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CalorieGoal_NutritionId",
-                table: "CalorieGoal",
-                column: "NutritionId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CalorieGoal_UserId",
                 table: "CalorieGoal",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CaloriesConsumed_NutritionId",
-                table: "CaloriesConsumed",
-                column: "NutritionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaloriesConsumed_UserId",
@@ -345,14 +322,19 @@ namespace HealthyTracker.DAL.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Food_NutritionId",
+                name: "IX_Food_MealId",
                 table: "Food",
-                column: "NutritionId");
+                column: "MealId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FoodMeal_MealsId",
-                table: "FoodMeal",
-                column: "MealsId");
+                name: "IX_Meal_DailyId",
+                table: "Meal",
+                column: "DailyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRegistrations_UserId",
+                table: "UserRegistrations",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -377,25 +359,22 @@ namespace HealthyTracker.DAL.Migrations
                 name: "CalorieGoal");
 
             migrationBuilder.DropTable(
-                name: "CaloriesConsumed");
+                name: "Food");
 
             migrationBuilder.DropTable(
-                name: "FoodMeal");
+                name: "UserRegistrations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Food");
-
-            migrationBuilder.DropTable(
                 name: "Meal");
 
             migrationBuilder.DropTable(
-                name: "Nutrition");
+                name: "CaloriesConsumed");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }
