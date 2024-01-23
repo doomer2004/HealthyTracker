@@ -1,10 +1,11 @@
-import React from "react";
+import React, { FormEventHandler } from 'react';
 import { ILoginData } from "./types";
 import Layout from "../../layout/Layout";
 import { Box, Button, Card, TextField } from "@mui/material";
 import "./../../../styles/pages/Auth/signIn.css"
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import { client } from "../../../services/api";
 const SignUp = () => {
     const [loginData, setLoginData]
         = React.useState<ILoginData>({
@@ -19,9 +20,16 @@ const SignUp = () => {
         console.log(error);
     };
 
-    const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        console.log(loginData.email, loginData.password)
+    const handleLogin = async () => {
+        await client.signIn({
+          email: loginData.email,
+          password: loginData.password,
+        }).then((x: any) => {
+          localStorage.setItem('accessToken', x.accessToken);
+          localStorage.setItem('refreshToken', x.refreshToken);
+        }).then(() => {
+          window.location.href = '/nutrition-calculator';
+        });
     }
     const navigate = useNavigate();
 
@@ -59,7 +67,7 @@ const SignUp = () => {
                         margin: '20px 0',
                         fontSize: '16px',
                     }}
-                        onClick={() => console.log(loginData)}
+                        onClick={(e) => handleLogin()}
                     >
                         Sign up
                     </Button>

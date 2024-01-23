@@ -25,7 +25,6 @@ public class MealController : ControllerBase
     }
 
     [HttpGet("all-products")]
-    [Authorize]
     public async Task<IActionResult> GetAllProducts(DateTime date, Guid mealId)
     {
         var value = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -44,7 +43,6 @@ public class MealController : ControllerBase
     }
     
     [HttpGet("nutrition")]
-    [Authorize]
     public async Task<IActionResult> GetNutrition(Guid mealId)
     {
         var value = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

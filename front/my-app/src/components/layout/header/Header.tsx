@@ -1,11 +1,19 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { Box, Card, Button, Link } from "@mui/material";
 import logo from "../../../../src/images/Logo_HTM.svg";
 import "../../../styles/layout/header.css"
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../../contexts/UserContext";
+import MenuAvatar from "../../home/MenuAvatar";
 
 const Header: FC = () => {
+    const { user, loading, updateUser, refreshUser } = useUser();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        refreshUser();
+    }, []);
+
     return (
         <Box className="page-wrapper">
             <Card className="header">
@@ -41,13 +49,24 @@ const Header: FC = () => {
                     </Link>
                 </Box>
                 <Box className="header-login">
-                    <Button variant="contained" onClick={() => navigate('/sign-in')}>Sign in</Button>
-                    <Button variant="contained" onClick={() => navigate('/sign-up')}>Sign up</Button>
+                    {loading
+                        ? <></>
+                        : (user ?
+                            <MenuAvatar
+                                onSignOut={() => updateUser(null)}
+                                onProfile={() => navigate('/user-account')} />
+                            :
+                            <>
+                                <Button variant="contained" onClick={() => navigate('/sign-in')}>Sign in</Button>
+                                <Button variant="contained" onClick={() => navigate('/sign-up')}>Sign up</Button>
+                            </>
+                        )}
                 </Box>
-            </Card>
+            </Card >
 
-        </Box>
+        </Box >
     )
 }
 
 export default Header
+

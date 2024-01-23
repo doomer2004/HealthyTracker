@@ -5,6 +5,7 @@ import "./../../../styles/pages/nutritionCalculator.css";
 import NutritionInput from './NutritionInput';
 import { setFlagsFromString } from 'v8';
 import { calculateCaffeineIntake, calculateDailyCalories, calculateFiberIntake, calculateMacronutrients, calculateSaltIntake, calculateWaterIntake } from './calculationFunctions';
+import { client } from '../../../services/api';
 
 
 
@@ -62,6 +63,16 @@ const NutritionCalculator = () => {
 	const saltIntake = calculateSaltIntake(weight, bodyFatPercentage).toFixed(2);
 	const caffeineNormal = calculateCaffeineIntake(weight, false).toFixed(2);
 	const caffeineMax = calculateCaffeineIntake(weight, true).toFixed(2);
+
+	const save = async () => {
+		await client.nutritionGoalPOST({
+			calories: Number(dailyCalories),
+			protein: macronutrients.protein,
+			fat: macronutrients.fat,
+			userId: 'B4D6DFF1-42E8-4DA4-7290-08DC1B865422',
+			carbs: macronutrients.carbohydrates,
+		})
+	}
 
 	return (
 		<Layout>
@@ -175,7 +186,7 @@ const NutritionCalculator = () => {
 						<Typography>Caffeine Max(mg): {caffeineMax}</Typography>
 					</Card>
 				</Box>
-				<Button variant="contained">Save</Button>
+				<Button variant="contained" onClick={() => save()}>Save</Button>
 			</Box>
 		</Layout >
 	);

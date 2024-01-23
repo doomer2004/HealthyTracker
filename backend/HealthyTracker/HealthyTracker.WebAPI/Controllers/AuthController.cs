@@ -54,7 +54,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(string), 200)]
     public async Task<IActionResult> Me()
     {
-        return Ok("Hello");
+        return Ok(new() {});
     }
     
     [HttpPost("confirm-email")]

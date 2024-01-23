@@ -56,7 +56,7 @@ public class NutritionGoalService : INutritionGoalService
     private async Task<bool> UpdateAsync(Guid userId, NutritionGoalDTO dto)
     {
         var nutrition = _mapper.Map<NutritionGoal>(dto);
-        await _nutritionGoalRepository.Insert(nutrition);
+        await _nutritionGoalRepository.Update(nutrition);
         
         return true;
     }

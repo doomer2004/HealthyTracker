@@ -41,7 +41,7 @@ const SignIn = () => {
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        await client.signUpAll({
+        await client.signUp({
           email: userData.email,
           password: userData.password,
           firstName: userData.firstName,

@@ -10,9 +10,7 @@ import { useUser } from "../../contexts/UserContext";
 
 interface MenuAvatarProps {
 	onSignOut: () => void;
-	onSettings: () => void;
 	onProfile: () => void;
-	onAdd: () => void;
 }
 
 const MenuAvatar = (props: MenuAvatarProps) => {
@@ -78,19 +76,7 @@ const MenuAvatar = (props: MenuAvatarProps) => {
 					Profile
 				</MenuItem>
 				<Divider />
-				<MenuItem onClick={props.onAdd}>
-					<ListItemIcon>
-						<AddIcon fontSize="small" />
-					</ListItemIcon>
-					Add fundraising
-				</MenuItem>
 				<Divider />
-				<MenuItem onClick={props.onSettings}>
-					<ListItemIcon>
-						<Settings fontSize="small" />
-					</ListItemIcon>
-					Settings
-				</MenuItem>
 				<MenuItem onClick={props.onSignOut}>
 					<ListItemIcon>
 						<Logout fontSize="small" />

@@ -19,10 +19,10 @@ public class NutritionGoalController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> UpdateGoal(NutritionGoalDTO dto)
     {
-        var value = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        // var value = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var value = dto.UserId.ToString();
         if (value == null) return BadRequest();
         var userId = Guid.Parse(value);
         await _nutritionGoalService.SaveAsync(userId, dto);
@@ -30,7 +30,6 @@ public class NutritionGoalController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> GetGoal()
     {
         var value = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

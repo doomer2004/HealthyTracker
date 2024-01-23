@@ -110,6 +110,7 @@ builder.Services.AddMemoryCache();
 
 //Mapper
 builder.Services.AddAutoMapper(typeof(UserProfile));
+builder.Services.AddAutoMapper(typeof(NutritionGoalProfile));
 
 //Validators
 builder.Services.AddValidatorServiceFromAssemblyContaining<SignInDTOValidator>();
