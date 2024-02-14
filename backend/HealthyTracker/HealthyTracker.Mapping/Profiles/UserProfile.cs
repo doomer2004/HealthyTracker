@@ -35,5 +35,7 @@ public class UserProfile : Profile
                 => opt.MapFrom(src => src.PasswordHash != null))
             .ForMember(dest => dest.Avatar, opt
                 => opt.MapFrom(src => src.Avatar));
+        
+        
     }
 }
