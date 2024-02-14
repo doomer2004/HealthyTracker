@@ -34,7 +34,7 @@ public class NutritionsClient : INutritionsClient
                 .AddBody(request);
 
             var result = await client.PostAsync<GetNutritionByNameResponse>(restRequest);
-
+            AdjustToDefaultWeight(result, 100);
             return result;
         }
         catch (Exception ex)
@@ -42,5 +42,17 @@ public class NutritionsClient : INutritionsClient
             _logger.LogError(ex, "Error in Nutrition client");
             return null;
         }
+    }
+    
+    private void AdjustToDefaultWeight(GetNutritionByNameResponse productInfo, double defaultWeight)
+    {
+        var product = productInfo.Foods.First();
+        double weightRatio = defaultWeight / product.ServingWeightGrams + defaultWeight % product.ServingWeightGrams;
+
+        product.ServingWeightGrams = defaultWeight;
+        product.Calories = product.Calories / weightRatio;
+        product.Protein = product.Protein / weightRatio;
+        product.TotalFat = product.TotalFat / weightRatio;
+        product.TotalCarbohydrate = product.TotalCarbohydrate / weightRatio;
     }
 }

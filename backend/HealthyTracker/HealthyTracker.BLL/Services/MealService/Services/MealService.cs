@@ -30,7 +30,7 @@ public class MealService : IMealService
         var meal = new Meal
         {
             DailyId = dailyId,
-            Products = new List<Product>(3)
+            Products = new List<Product>()
         };
         
         await _mealRepository.Insert(meal);
@@ -48,7 +48,7 @@ public class MealService : IMealService
     public async Task<GetMealNutritionDTO> GetNutritionAsync(Guid userId, Guid mealId)
     {
         var meals = await _mealRepository.Table.Include(u => u.Daily)
-            .ThenInclude(d => d.UserId).Where(u => u.Daily.UserId == userId).ToListAsync();
+            .ThenInclude(u => u.Meals).ThenInclude(p => p.Products).Where(u => u.Daily.UserId == userId).ToListAsync();
         
         var nutrition = new GetMealNutritionDTO();
         foreach (var meal in meals)
@@ -61,12 +61,18 @@ public class MealService : IMealService
         
         return nutrition;
     }
+    
 
-    public async Task<List<Meal>> GetUserMealAsync(Guid userId)
+    public async Task<List<MealDTO>> GetUserMealAsync(Guid userId, DateTime date)
     {
-        var nutrition = await _mealRepository.Table.Include(u => u.Daily)
-            .ThenInclude(d => d.UserId).Where(u => u.Daily.UserId == userId).ToListAsync();
+        var nutrition = await _mealRepository
+            .Table
+            .Include(u => u.Daily)
+            .ThenInclude(u => u.Meals)
+            .ThenInclude(u => u.Products)
+            .Where(u => u.Daily.UserId == userId && u.Daily.Date == date)
+            .ToListAsync();
         
-        return nutrition;
+        return _mapper.Map<List<MealDTO>>(nutrition);
     }
 }

@@ -10,6 +10,5 @@ public interface IMealService
     Task<List<ProductDTO>> GetAllProductsAsync(Guid userId, 
         DateTime date, Guid mealId);
     Task<GetMealNutritionDTO> GetNutritionAsync(Guid userId, Guid mealId);
-    Task<List<Meal>> GetUserMealAsync(Guid userId);
-    Task AddMealAsync(Guid userId, Guid dailyId);
+    Task<List<MealDTO>> GetUserMealAsync(Guid userId, DateTime date);
 }

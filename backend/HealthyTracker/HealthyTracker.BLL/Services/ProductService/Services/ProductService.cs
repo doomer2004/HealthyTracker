@@ -42,10 +42,15 @@ public class ProductService : IProductService
         {
             var request = await _nutritionsClient.GetNutritionsByNameAsync
                 (new GetNutritionByNameRequest {Query = name});
+            
             var products = ParseProducts(request);
             var product = await ProductByParams(products, volume);
             var productResponse = _mapper.Map<Product>(product);
-            _mealRepository.Table.First(meal => meal.Id == mealId).Products.Add(productResponse);
+
+            var meal = _mealRepository.Table.First(meal => meal.Id == mealId);
+            meal.Products ??= new List<Product>();
+            
+            meal.Products.Add(productResponse);
             await _mealRepository.SaveChangesAsync();
             return Option<ErrorModel>.None;
         }
@@ -60,11 +65,13 @@ public class ProductService : IProductService
     {
         try
         {
-            var product = _productRepository.Table.Where(p => p.Id == productId);
-            ;
-            var updatedProduct = await ProductByParams(product.ToList(), volume);
-            var productResponse = _mapper.Map<Product>(product);
-            await _productRepository.Update(productResponse);
+            var product = _productRepository.Table.Where(p => p.Id == productId).FirstOrDefault();
+            
+            var updatedProduct = await ProductByParams(new List<Product> { product }, volume);
+            var productResponse = _mapper.Map(updatedProduct, product);
+
+            await _productRepository.SaveChangesAsync();
+
             return Option<ErrorModel>.None;
         }
         catch (Exception e)
@@ -108,17 +115,17 @@ public class ProductService : IProductService
                 Water = Convert.ToSingle(food.FullNutrients.First(nutrient => nutrient.AttrId == 255).Value),
             }).ToList();
         }
-        
         return new List<Product>();
     }
 
     private Task<ProductDTO> ProductByParams(List<Product> products, int volume)
     {
         var product = products.First();
-
+        
         var productParams = new ProductDTO
         {
-            Volume = 1,
+            ProductName = product.ProductName,
+            Volume = product.Volume,
             Calories = (product.Calories / product.Volume) + (product.Calories % product.Volume),
             Protein = (product.Protein / product.Volume) + (product.Protein % product.Volume),
             Fat = (product.Fat / product.Volume) + (product.Fat % product.Volume),
@@ -126,10 +133,13 @@ public class ProductService : IProductService
             Salt = (product.Salt / product.Volume) + (product.Salt % product.Volume),
             Caffeine = (product.Caffeine / product.Volume) + (product.Caffeine % product.Volume),
             Water = (product.Water / product.Volume) + (product.Water % product.Volume)
+            
         };
+        /*
 
         var realProduct = new ProductDTO
         {
+            ProductName = productParams.ProductName,
             Volume = volume,
             Calories = productParams.Calories * volume,
             Protein = productParams.Protein * volume,
@@ -139,8 +149,24 @@ public class ProductService : IProductService
             Caffeine = productParams.Caffeine * volume,
             Water = productParams.Water * volume
         };
+        */
+        
+        var realProduct = new ProductDTO
+        {
+            ProductName = productParams.ProductName,
+            Volume = volume,
+            Calories = productParams.Calories / productParams.Volume * volume,
+            Protein = productParams.Protein / productParams.Volume * volume,
+            Fat = productParams.Fat / productParams.Volume * volume,
+            Carbs = productParams.Carbs / productParams.Volume * volume,
+            Salt = productParams.Salt / productParams.Volume * volume,
+            Caffeine = productParams.Caffeine / productParams.Volume * volume,
+            Water = productParams.Water / productParams.Volume * volume,
+        };
         
         return Task.FromResult(realProduct);
-    } 
+    }
+    
+    
 }
 

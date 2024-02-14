@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using HealthyTracker.BLL.Extensions;
 using HealthyTracker.BLL.Services.Auth.Interfaces;
+using HealthyTracker.BLL.Services.UserServices.Interfaces;
 using HealthyTracker.Common.Models.Configs;
 using HealthyTracker.Common.Models.DTOs.Error;
 using HealthyTracker.Common.Models.DTOs.User;
@@ -30,6 +32,23 @@ public class UserService : IUserService
         _appData = appData;
     }
 
+    public async Task<Either<ErrorDto, UserDTO>> GetByClaimsPrincipalAsync(ClaimsPrincipal user, string apiUrl)
+    {
+        var currentUser = await _userManager.GetUserAsync(user);
+        if (currentUser is null)
+            return new NotFoundErrorDTO("User with this id does not exist");
+
+        return ToDto<UserDTO>(currentUser, apiUrl);
+    }
+    
+    public async Task<Guid?> GetByClaimPrincipalAsync(ClaimsPrincipal user, string apiUrl)
+    {
+        var currentUser =  await _userManager.GetUserAsync(user);
+        // currentUser.
+        
+    
+        return await Task.FromResult(currentUser?.Id);
+    }
     public async Task<Either<ErrorDto, UserDTO>> GetByIdAsync(Guid id, string apiUrl)
     {
         var user = await _userManager.FindByIdAsync(id.ToString());
@@ -76,9 +95,11 @@ public class UserService : IUserService
         if (!Directory.Exists(directory))
             Directory.CreateDirectory(directory);
 
-        user.Avatar = Path.Combine(directory, $"{_appData.AvatarFileName}{_appData.AllowedImages[stream.ContentType]}");
+        var localAvatarPath = Path.Combine(directory, $"{_appData.AvatarFileName}{_appData.AllowedImages[stream.ContentType]}");
+        
+        user.Avatar = Path.Combine("http:\\\\localhost:7243", $"Uploads\\Users\\{user.Id.ToString("N")}\\{_appData.AvatarFileName}{_appData.AllowedImages[stream.ContentType]}");
 
-        await using var outputStream = File.Create(user.Avatar);
+        await using var outputStream = File.Create(localAvatarPath);
         await using var inputStream = stream.OpenReadStream();
         await inputStream.CopyToAsync(outputStream);
 
