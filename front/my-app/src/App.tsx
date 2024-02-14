@@ -31,8 +31,8 @@ const App: FC = () => {
                     <Route path="/sign-up" element={<SignUp />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/nutrition-calculator" element={<NutritionCalculator />} />
-                    <Route path="/{id}/change-password" element={<ChangePassword />} />
-                    <Route path="/{id}/user-account" element={<UserActivation />} />
+                    <Route path="/id/change-password" element={<ChangePassword />} />
+                    <Route path="/user-account" element={<UserActivation />} />
                     <Route path="/remaind-password" element={<RemaindPassword />} />
                     <Route path="/id/my-nutrition" element={<MyNutrition />} />
                     <Route path="*" element={<h1 style={{ color: 'red' }} >Not Found</h1>} />

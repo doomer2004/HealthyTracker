@@ -1,15 +1,14 @@
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import User from "../models/user/User";
-import { client } from '../services/api';
+import Auth from "../services/api/Auth";
 
-
+export type RefreshUser = () => Promise<User | null>;
 interface UserContextProps {
 	user: User | null;
 	updateUser: (newUser: User | null) => void;
-	refreshUser: () => Promise<User | null>;
+	refreshUser: RefreshUser;
 	loading: boolean;
 }
-
 
 const UserContext = createContext<UserContextProps>({} as UserContextProps);
 
@@ -23,6 +22,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 
 	const updateUser = (newUser: User | null) => {
 		if (!newUser) {
+			console.log('clear user')
 			localStorage.removeItem('accessToken');
 			localStorage.removeItem('refreshToken');
 			setUser(null);
@@ -34,19 +34,15 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
 
 	const refreshUser = async (): Promise<User | null> => {
 		setLoading(true);
-		const user = await client.me();
+		const user = await Auth.me();
 		setLoading(false);
-		// @ts-ignore
-		setUser(user ?? null);
-		// @ts-ignore
+		updateUser(user ?? null);
 		return user ?? null;
 	}
 
 	useEffect(() => {
-		if (!user) {
-			refreshUser();
-		}
-	}, [user]);
+		refreshUser()
+	}, []);
 
 	return (
 		<UserContext.Provider value={{ user, updateUser, refreshUser, loading }}>

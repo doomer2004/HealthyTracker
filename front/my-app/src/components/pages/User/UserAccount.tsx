@@ -1,31 +1,63 @@
-import React from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 import Layout from "../../layout/Layout";
-import { Avatar, Box, Button, Card, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper } from "@mui/material";
 import { IUserData } from "./types";
 import "../../../styles/pages/userAccount.css"
+import { useUser } from "../../../contexts/UserContext";
+import Users from "../../../services/api/Users";
+import UploadImage from "../../profile/UploadImage";
 const UserAccount = () => {
 
-	const userData: IUserData = {
-		firstName: "123",
-		lastName: "123",
-		email: "123",
+	const inputFile = useRef(null);
+	const { user, refreshUser, loading } = useUser();
+
+	useEffect(() => {
+		refreshUser();
+	}, []);
+
+	const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+		const { files } = e.target;
+		if (files && files.length) {
+			Users.uploadAvatar(files[0]).then((response) => {
+				console.log('response', response)
+				if (response) {
+					refreshUser();
+				}
+			});
+		}
+	};
+
+	const handleDeleteFile = () => {
+		Users.deleteAvatar().then((response) => {
+			if (response) {
+				refreshUser();
+			}
+		});
 	}
+
+	const userData: IUserData = {
+		firstName: user?.firstName || '',
+		lastName: user?.lastName || '',
+		email: user?.email || '',
+	};
+
+	console.log(user)
 	return (
 		<Layout>
 			<Box className="main">
 				<Box className="main-avatar">
-					<Avatar
-						alt="Remy Sharp"
-						src=""
-						sx={{ width: 200, height: 200 }}
-						onClick={() => { console.log("click") }}
+					<UploadImage
+						inputFile={inputFile}
+						handleFileUpload={handleFileUpload}
+						handleDeleteFile={handleDeleteFile}
+						url={user?.avatar ?? ''}
 					/>
 				</Box>
 				<Box className="main-info">
 
-					<Paper elevation={1} className="main-info-paper">{userData.firstName}</Paper>
-					<Paper elevation={1} className="main-info-paper">{userData.lastName}</Paper>
-					<Paper elevation={1} className="main-info-paper">{userData.email}</Paper>
+					<Paper elevation={1} className="main-info-paper">First: name: {userData.firstName}</Paper>
+					<Paper elevation={1} className="main-info-paper">Last: name {userData.lastName}</Paper>
+					<Paper elevation={1} className="main-info-paper">Email: {userData.email}</Paper>
 				</Box>
 			</Box>
 			<Box className="main-buttons">

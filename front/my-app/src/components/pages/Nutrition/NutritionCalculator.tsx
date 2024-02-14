@@ -5,8 +5,10 @@ import "./../../../styles/pages/nutritionCalculator.css";
 import NutritionInput from './NutritionInput';
 import { setFlagsFromString } from 'v8';
 import { calculateCaffeineIntake, calculateDailyCalories, calculateFiberIntake, calculateMacronutrients, calculateSaltIntake, calculateWaterIntake } from './calculationFunctions';
-import { client } from '../../../services/api';
+// import { client } from '../../../services/api';
 import { UserProvider, useUser } from "../../../contexts/UserContext";
+import useNotification from '../../../hooks/useNotification';
+import NutritionGoal from '../../../services/api/NutritionGoal';
 
 
 
@@ -15,6 +17,8 @@ const NutritionCalculator = () => {
 	useEffect(() => {
 		refreshUser();
 	}, []);
+
+	const { notifySuccess, Notification } = useNotification();
 
 	const [weight, setWeight] = useState<number>(70); // initial weight
 	const [height, setHeight] = useState<number>(170); // initial height
@@ -70,19 +74,20 @@ const NutritionCalculator = () => {
 	const caffeineNormal = calculateCaffeineIntake(weight, false).toFixed(2);
 	const caffeineMax = calculateCaffeineIntake(weight, true).toFixed(2);
 
-	const save = async () => {
-		if (user != null) {
-			await client.nutritionGoalPOST({
-				calories: Number(dailyCalories),
-				protein: macronutrients.protein,
-				fat: macronutrients.fat,
-				userId: 'B4D6DFF1-42E8-4DA4-7290-08DC1B865422',
-				carbs: macronutrients.carbohydrates,
-			})
+	const onClick = async () => {
+		const requestBody = {
+			userId: (user?.id as string).toString(),
+			calories: parseFloat(dailyCalories),
+			proteins: macronutrients.protein,
+			fat: macronutrients.fat,
+			carbohydrates: macronutrients.carbohydrates,
 		}
-		else {
-			// redirect to login
-		}
+
+		console.log(requestBody);
+
+		await NutritionGoal.saveNutrition(requestBody);
+
+		notifySuccess('Nutrition goal saved successfully');
 	}
 
 	return (
@@ -190,15 +195,20 @@ const NutritionCalculator = () => {
 						<Typography>Protein: {macronutrients.protein.toFixed(2)}</Typography>
 						<Typography>Fat: {macronutrients.fat.toFixed(2)}</Typography>
 						<Typography>Carbohydrates: {macronutrients.carbohydrates.toFixed(2)}</Typography>
-						<Typography>Water: {waterIntake}</Typography>
+						<Typography>Water(L): {waterIntake}</Typography>
 						<Typography>Fiber: {fiberIntake}</Typography>
 						<Typography>Salt: {saltIntake}</Typography>
 						<Typography>Caffeine Normal(mg): {caffeineNormal}</Typography>
 						<Typography>Caffeine Max(mg): {caffeineMax}</Typography>
 					</Card>
 				</Box>
-				<Button variant="contained" onClick={() => save()}>Save</Button>
+				<Button
+					sx={{ marginBottom: '20px' }}
+					variant="contained"
+					onClick={() => onClick()}>Save</Button>
 			</Box>
+
+			<Notification />
 		</Layout >
 	);
 };

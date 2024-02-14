@@ -1,9 +1,8 @@
-import axios from 'axios';
+import axiosInstance from '../';
 import { APIRequestBase } from '../../../models/api/request/base/APIRequestBase';
 import { ErrorModel } from '../../../models/api/response/base/ErrorModel';
 import { PagedRequest } from '../../../models/api/request/base/PagedRequest';
-
-const API_URL = 'https://localhost:7008/api';
+import axios from 'axios';
 
 interface APIResponse<T> {
 	success: boolean;
@@ -14,11 +13,7 @@ interface APIResponse<T> {
 export const API = {
 	get: async <TResponse>(url: string): Promise<APIResponse<TResponse>> => {
 		 try {
-			  const response = await axios.get<TResponse>(API_URL + url, {
-					headers: {
-						 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
-					}
-			  });
+			  const response = await axiosInstance.get<TResponse>(url);
 			  return { success: true, data: response.data };
 		 } catch (error: any) {
 			  return { success: false, error: error.response?.data };
@@ -32,28 +27,25 @@ export const API = {
 		headers?: { [key: string]: string }
   		): Promise<APIResponse<TResponse>> => {
 		try {
-			 const response = await axios.post<TResponse>(API_URL + url, data, {
-				  headers: {
-						'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-						...headers
-				  }
-			 });
+			const response = await axios.post<TResponse>('http://localhost:7243/api' + url, data, {
+				headers: {
+					 'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+					 ...headers
+				}
+		  });
 			 return { success: true, data: response.data };
 		} catch (error: any) {
-			 return { success: false, error: error.response?.data };
+			console.error(error);
+			return { success: false, error: error.response?.data };
 		}
   },
 
-put: async <TRequest extends APIRequestBase, TResponse>(
+	put: async <TRequest extends APIRequestBase, TResponse>(
         url: string,
         data: TRequest
     ): Promise<APIResponse<TResponse>> => {
         try {
-            const response = await axios.put<TResponse>(API_URL + url, data, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
-                }
-            });
+            const response = await axiosInstance.put<TResponse>(url, data);
             return { success: true, data: response.data };
         } catch (error: any) {
             return { success: false, error: error.response?.data };
@@ -62,11 +54,7 @@ put: async <TRequest extends APIRequestBase, TResponse>(
 
     delete: async <TResponse>(url: string): Promise<APIResponse<TResponse>> => {
         try {
-            const response = await axios.delete<TResponse>(API_URL + url, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
-                }
-            });
+            const response = await axiosInstance.delete<TResponse>(url);
             return { success: true, data: response.data };
         } catch (error: any) {
             return { success: false, error: error.response?.data };

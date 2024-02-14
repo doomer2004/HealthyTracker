@@ -41,7 +41,7 @@ namespace HealthyTracker.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CaloriesConsumed");
+                    b.ToTable("Daily");
                 });
 
             modelBuilder.Entity("HealthyTracker.DAL.Entities.Meal", b =>
@@ -89,7 +89,7 @@ namespace HealthyTracker.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CalorieGoal");
+                    b.ToTable("NutritionGoal");
                 });
 
             modelBuilder.Entity("HealthyTracker.DAL.Entities.Product", b =>
@@ -136,7 +136,7 @@ namespace HealthyTracker.DAL.Migrations
 
                     b.HasIndex("MealId");
 
-                    b.ToTable("Food");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("HealthyTracker.DAL.Entities.User", b =>

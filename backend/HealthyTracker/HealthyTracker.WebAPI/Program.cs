@@ -13,6 +13,7 @@ using HealthyTracker.BLL.Services.NutritionService.Interfaces;
 using HealthyTracker.BLL.Services.NutritionService.Services;
 using HealthyTracker.BLL.Services.ProductService.Interfaces;
 using HealthyTracker.BLL.Services.ProductService.Services;
+using HealthyTracker.BLL.Services.UserServices.Interfaces;
 using HealthyTracker.BLL.Services.UserServices.Services;
 using HealthyTracker.Client.Nutrition;
 using HealthyTracker.Common.Models.Configs;
@@ -111,6 +112,9 @@ builder.Services.AddMemoryCache();
 //Mapper
 builder.Services.AddAutoMapper(typeof(UserProfile));
 builder.Services.AddAutoMapper(typeof(NutritionGoalProfile));
+builder.Services.AddAutoMapper(typeof(ProductProfile));
+builder.Services.AddAutoMapper(typeof(DailyProfile));
+builder.Services.AddAutoMapper(typeof(MealProfile));
 
 //Validators
 builder.Services.AddValidatorServiceFromAssemblyContaining<SignInDTOValidator>();
@@ -137,19 +141,14 @@ var tokenValidationParameters = new TokenValidationParameters
     ValidateIssuer = true,
     ValidateAudience = true,
     ValidateLifetime = true,
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Secret)),
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.Secret)),
     ValidIssuer = jwtConfig.Issuer,
     ValidAudience = jwtConfig.Audience,
-    ClockSkew = jwtConfig.ClockSkew
+    ClockSkew = TimeSpan.Zero
 };
 builder.Services.AddSingleton(tokenValidationParameters);
 
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.SaveToken = true;
@@ -216,9 +215,9 @@ app.UseCors(x => x.AllowAnyHeader()
     .AllowAnyOrigin()
     .AllowAnyMethod());
 
-app.UseAuthorization();
-
 app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
 

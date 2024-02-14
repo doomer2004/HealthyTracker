@@ -1,98 +1,66 @@
-import React, { FormEventHandler } from 'react';
-import { ILoginData } from "./types";
+import React from "react";
+import { IUserData } from "./types";
 import Layout from "../../layout/Layout";
-import { Box, Button, Card, TextField } from "@mui/material";
-import "./../../../styles/pages/Auth/signIn.css"
+import { Box, Button, FormHelperText, TextField } from '@mui/material';
 import { GoogleLogin } from "@react-oauth/google";
-import { useNavigate } from "react-router-dom";
-import { client } from "../../../services/api";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Error } from '@mui/icons-material';
+import { useUser } from "../../../contexts/UserContext";
+import useNotification from "../../../hooks/useNotification";
+import { ConfirmEmailRequest, SignUpRequest } from "../../../models/api/request/AuthRequests";
+import Auth from "../../../services/api/Auth";
+import SignUpForm from "../../auth/sign-in/sign-up/SignUpForm";
+import AuthGoogleButton from "../../google/SignInGoogle";
+
+
 const SignUp = () => {
-    const [loginData, setLoginData]
-        = React.useState<ILoginData>({
-            email: '',
-            password: '',
-        } as ILoginData);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const adminToken = queryParams.get('adminToken') ?? undefined;
 
-    const responseMessage = (response: any) => {
-        console.log(response);
-    };
-    const errorMessage = (error: any) => {
-        console.log(error);
-    };
+  const [userId, setUserId] = React.useState<string | undefined>(undefined);
+  const { updateUser } = useUser();
+  const navigate = useNavigate();
 
-    const handleLogin = async () => {
-        await client.signIn({
-          email: loginData.email,
-          password: loginData.password,
-        }).then((x: any) => {
-          localStorage.setItem('accessToken', x.accessToken);
-          localStorage.setItem('refreshToken', x.refreshToken);
-        }).then(() => {
-          window.location.href = '/nutrition-calculator';
-        });
+  const { notifyError, Notification } = useNotification();
+
+  const signUp = async (request: SignUpRequest) => {
+    const response = await Auth.signUp({ ...request });
+
+    if (response !== undefined)
+      setUserId(response.userId);
+    else
+      notifyError("Error during signing up");
+  }
+
+  const confirmEmail = async (request: ConfirmEmailRequest) => {
+    const response = await Auth.confirmEmail(request);
+
+    if (response === undefined) {
+      const user = await Auth.me();
+      if (user) {
+        updateUser(user);
+        navigate('/');
+      } else {
+        notifyError('Error during signing in');
+      }
     }
-    const navigate = useNavigate();
+    else {
+      notifyError("Error during confirming email");
+    }
+  }
 
-    return (
-        <Layout>
-            <Box className="main" sx={{ height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <form className="sign-in-form" onSubmit={handleLogin}>
-                    <p className="sign-in-title">Sign up</p>
-                    <TextField
-                        id="standard-basic"
-                        label="Email"
-                        variant="standard"
-                        value={loginData.email}
-                        sx={{
-                            display: 'block',
-                            marginTop: '20px'
-                        }}
-                        onChange={e => setLoginData({ ...loginData, email: e.target.value })}
-                    />
-                    <TextField
-                        id="standard-basic"
-                        type="password"
-                        label="Password"
-                        variant="standard"
-                        value={loginData.password}
-                        sx={{
-                            display: 'block',
-                            marginTop: '20px'
-                        }}
-                        onChange={e => setLoginData({ ...loginData, password: e.target.value })}
-                    />
-                    <Button sx={{
-                        marginTop: '20px',
-                        alignItems: 'center',
-                        margin: '20px 0',
-                        fontSize: '16px',
-                    }}
-                        onClick={(e) => handleLogin()}
-                    >
-                        Sign up
-                    </Button>
+  return (
+    <Layout>
+      <Box className="main" sx={{ height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Box className="sign-in-form">
+          <SignUpForm onSubmit={(fields) => signUp(fields)} />
+          <AuthGoogleButton label="Sign up with Google" type="sign-up" />
+        </Box>
+      </Box>
 
-                    <Button
-                        onClick={() => navigate('/remaind-password')}
-                        sx={{
-                            marginTop: '20px',
-                            alignItems: 'center',
-                            margin: '20px 0',
-                            fontSize: '16px',
-                        }}
-                    >
-                        Remaind password?
-                    </Button>
-                    <GoogleLogin
-                        onSuccess={responseMessage}
-                        onError={() => errorMessage("Error")}
-                    />
-
-                </form>
-            </Box>
-
-
-        </Layout>
-    )
+      <Notification />
+    </Layout >
+  )
 };
 export default SignUp;

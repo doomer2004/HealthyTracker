@@ -16,8 +16,10 @@ const Auth = {
   },
 
   signIn: async (request: SignInRequest): Promise<ErrorModel | undefined> => {
+	console.log('signIn');
 	const response = await API.post<SignInRequest, AuthSuccessResponse>('/auth/sign-in', request);
 
+	console.log(response);
 	if (response.success) {
 		 const tokens = response.data as AuthSuccessResponse;
 		 localStorage.setItem('accessToken', tokens.accessToken ?? '');
@@ -66,19 +68,13 @@ refreshToken: async (request: RefreshTokenRequest): Promise<ErrorModel | undefin
 },
 
 me: async (retry: boolean = true): Promise<User | undefined> => {
-	const response = await API.get<User>('/users/me');
+	const response = await API.get<User>('/auth/me');
 
 	if (response.success) {
 		 return response.data as User;
 	}
 
-	if (response.error?.code === 401) {
-		 localStorage.removeItem('accessToken');
-		 localStorage.removeItem('refreshToken');
-		 return undefined;
-	}
-
-	return undefined;
+	return response.data as User;
 },
 startSilentRefresh: () => {
 	setInterval(async () => {
@@ -120,7 +116,17 @@ signUpGoogle: async (token: string): Promise<ErrorModel | undefined> => {
 	}
 
 	return response.error;
+},
+
+forgotPassword: async(requestBody: {email: string}) => {
+	try {
+		 return await API.post('/auth/forgot-password', requestBody);
+	}
+	catch (e) {
+		 console.error(e);
+	}
 }
+
 };
 
 export default Auth;

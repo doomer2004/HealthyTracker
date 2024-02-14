@@ -1,36 +1,27 @@
-import React from "react";
-import { IUserData } from "./types";
+import React, { FormEventHandler } from 'react';
+import { ILoginData } from "./types";
 import Layout from "../../layout/Layout";
-import { Box, Button, FormHelperText, TextField } from '@mui/material';
+import { Box, Button, Card, TextField } from "@mui/material";
+import "./../../../styles/pages/Auth/signIn.css"
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import { client } from '../../../services/api';
-import { Error } from '@mui/icons-material';
-
+import { useUser } from '../../../contexts/UserContext';
+import useNotification from '../../../hooks/useNotification';
+import { SignInFormFields } from '../../../models/form/auth/AuthFormFields';
+import Auth from '../../../services/api/Auth';
+import SignInForm from '../../auth/sign-in/SignInForm';
+import AuthGoogleButton from '../../google/SignInGoogle';
 
 const SignIn = () => {
-    const [userData, setUserData]
-        = React.useState<IUserData>({
-            firstName: '',
-            lastName: '',
+    const { refreshUser } = useUser();
+    const { notifyError, Notification } = useNotification();
+    const navigate = useNavigate();
+
+    const [loginData, setLoginData]
+        = React.useState<ILoginData>({
             email: '',
             password: '',
-            confirmPassword: '',
-        } as IUserData);
-
-    const [errors, setErrors] = React.useState<IUserData>({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-    } as IUserData);
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = event.target;
-      setUserData(prev => ({ ...prev, [name]: value }));
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+        } as ILoginData);
 
     const responseMessage = (response: any) => {
         console.log(response);
@@ -39,102 +30,42 @@ const SignIn = () => {
         console.log(error);
     };
 
-    const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        await client.signUp({
-          email: userData.email,
-          password: userData.password,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-        }).catch((error) => {
-          const keys = Object.keys(error.body);
-          for (const key of keys) {
-            const keyToLowerCase = key[0].toLowerCase() + key.slice(1);
-            setErrors(prev => ({ ...prev, [keyToLowerCase]: error.body[key] }));
-          }
-        });
-    }
-    const inputs = [
-      {
-        label: 'First Name',
-        name: 'firstName',
-        type: 'text',
-      },
-      {
-        label: 'Last Name',
-        name: 'lastName',
-        type: 'text',
-      },
-      {
-        label: 'Email',
-        name: 'email',
-        type: 'email',
-      },
-      {
-        label: 'Password',
-        name: 'password',
-        type: 'password',
-      },
-      {
-        label: 'Confirm Password',
-        name: 'confirmPassword',
-        type: 'password',
-      }];
-    const navigate = useNavigate();
+    // const handleLogin = async () => {
+    //     await client.signIn({
+    //         email: loginData.email,
+    //         password: loginData.password,
+    //     }).then((x: any) => {
+    //         localStorage.setItem('accessToken', x.accessToken);
+    //         localStorage.setItem('refreshToken', x.refreshToken);
+    //     }).then(() => {
+    //         window.location.href = '/nutrition-calculator';
+    //     });
+    // }
+
+    const onSubmit = async (fields: SignInFormFields) => {
+        console.log('onSubmit', fields)
+        const error = await Auth.signIn({ ...fields });
+        if (!error) {
+            const user = refreshUser();
+            if (!user) notifyError('Error during signing in') 
+            else 
+                {navigate('/')};
+        }
+
+        notifyError(error?.message ?? 'Error during signing in');
+    };
+
 
     return (
         <Layout>
             <Box className="main" sx={{ height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <form className="sign-in-form" onSubmit={handleLogin}>
-                    <p className="sign-in-title">Sign in</p>
-                  {inputs.map((input, index) => (
-                    <>
-                    <TextField className="sign-in-input"
-                      id="standard-basic"
-                      label={input.label} type={input.type}
-                      variant="standard" name={input.name}
-                      value={userData[input.name as keyof IUserData]}
-                      sx={{
-                        display: 'block',
-                        marginTop: '20px'
-                      }}
-                      onChange={e => handleInputChange(e)}
-                    >
-                    </TextField>
-                      {errors[input.name as keyof IUserData] && <FormHelperText sx={{ color: 'red', width: '60%', wordBreak: 'break-word' }}>{errors[input.name as keyof IUserData]}</FormHelperText>}
-                    </>
-                  ))
-                  }
-                    <Button sx={{
-                        marginTop: '20px',
-                        alignItems: 'center',
-                        margin: '20px 0',
-                        fontSize: '16px',
-                    }}
-                        type="submit"
-                    >
-                        Sign in
-                    </Button>
-
-                    <Button sx={{
-                        marginTop: '20px',
-                        alignItems: 'center',
-                        margin: '20px 0',
-                        fontSize: '16px',
-                    }}
-                        onClick={() => navigate('/sign-up')}
-                    >
-                        Already have an account? Sign up
-                    </Button>
-
-                    <GoogleLogin
-                        onSuccess={responseMessage}
-                        onError={() => errorMessage("Error")}
-                    />
-                </form>
+                <Box className="sign-in-form">
+                    <SignInForm onSubmit={onSubmit} />
+                    <AuthGoogleButton label="Sign up with Google" type="sign-in" />
+                </Box>
             </Box>
 
-
+            <Notification />
         </Layout>
     )
 };

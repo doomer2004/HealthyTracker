@@ -1,1 +1,3 @@
-export interface APIResponseBase { }
+export interface APIResponseBase {
+	result: string
+}

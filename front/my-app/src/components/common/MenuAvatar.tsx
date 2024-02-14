@@ -32,7 +32,7 @@ const MenuAvatar = (props: MenuAvatarProps) => {
 			<Avatar
 				onClick={handleClick}
 				{...stringAvatar(user?.firstName)}
-				src={user?.avatarUrl}
+				src={user?.avatar}
 			/>
 			<Menu
 				anchorEl={anchorEl}

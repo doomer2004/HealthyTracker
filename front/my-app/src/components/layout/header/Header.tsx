@@ -10,9 +10,11 @@ const Header: FC = () => {
     const { user, loading, updateUser, refreshUser } = useUser();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        refreshUser();
-    }, []);
+    console.log(user)
+
+    // useEffect(() => {
+    //     refreshUser();
+    // }, []);
 
     return (
         <Box className="page-wrapper">
@@ -41,7 +43,7 @@ const Header: FC = () => {
                         Nutrition Calculator
                     </Link>
                     <Link
-                        href="/"
+                        href="/id/my-nutrition"
                         variant="h6"
                         color="inherit"
                         underline="hover">
@@ -50,10 +52,10 @@ const Header: FC = () => {
                 </Box>
                 <Box className="header-login">
                     {loading
-                        ? <></>
+                        ? <>Loading...</>
                         : (user ?
                             <MenuAvatar
-                                onSignOut={() => updateUser(null)}
+                                onSignOut={() => { console.log('logout'); updateUser(null) }}
                                 onProfile={() => navigate('/user-account')} />
                             :
                             <>

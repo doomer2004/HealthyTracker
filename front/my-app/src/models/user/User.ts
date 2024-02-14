@@ -3,7 +3,7 @@ interface User {
 	email: string;
 	firstName: string;
 	lastName: string;
-	avatarUrl: string;
+	avatar: string;
 }
 
 export default User;

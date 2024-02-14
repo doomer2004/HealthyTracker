@@ -3,7 +3,7 @@ import { useUser } from "../../contexts/UserContext";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import useNotification from "../../hooks/useNotification";
 import { Button } from "@mui/material";
-import { client } from '../../services/api';
+// import { client } from '../../services/api';
 
 const AuthGoogleButton = (props: { label: string, type: 'sign-in' | 'sign-up' }) => {
 	const { updateUser } = useUser();

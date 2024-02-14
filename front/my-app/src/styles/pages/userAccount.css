@@ -24,12 +24,13 @@
 }
 
 .main-info-paper{	
+	font-family: "Roboto","Helvetica","Arial",sans-serif;
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
 	width: fit-content;
-	min-width: 10%;
-	height: 40px;
+	min-width: 20%;
+	height: 50px;
 	margin: 1%;
 }
 
