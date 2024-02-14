@@ -10,9 +10,9 @@ public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, 
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
     
-    public virtual DbSet<Daily> CaloriesConsumed { get; set; } = null!;
-    public virtual DbSet<NutritionGoal> CalorieGoal { get; set; } = null!;
-    public virtual DbSet<Product> Food { get; set; } = null!;
+    public virtual DbSet<Daily> Daily { get; set; } = null!;
+    public virtual DbSet<NutritionGoal> NutritionGoal { get; set; } = null!;
+    public virtual DbSet<Product> Product { get; set; } = null!;
     public virtual DbSet<Meal> Meal { get; set; } = null!;
     public virtual DbSet<User> User { get; set; } = null!;
     public virtual DbSet<UserRegistration> UserRegistrations { get; set; } = null!;
