@@ -4,6 +4,7 @@ namespace HealthyTracker.Common.Models.DTOs.Meal;
 
 public class MealDTO
 {
-    public string MealType { get; set; } = string.Empty;
-    public List<ProductDTO> Foods { get; set; }
+    public Guid Id { get; set; }
+    public string Type { get; set; } = string.Empty;
+    public List<ProductDTO> Products { get; set; }
 }

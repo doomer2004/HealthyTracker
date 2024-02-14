@@ -3,6 +3,7 @@ namespace HealthyTracker.Common.Models.DTOs.Product;
 
 public class ProductDTO 
 {
+    public Guid productId { get; set; }
     public string ProductName { get; set; } = string.Empty;
     public int Volume { get; set; } 
     public float Calories { get; set; }
