@@ -1,12 +1,17 @@
 ﻿using System.Net;
+using AutoMapper;
 using HealthyTracker.BLL.Services.Auth.Interfaces;
 using HealthyTracker.Common.Models.DTOs.Auth;
 using HealthyTracker.Common.Models.DTOs.Error;
+using HealthyTracker.Common.Models.DTOs.User;
+using HealthyTracker.DAL.Entities;
 using HealthyTracker.Extensions;
 using HealthyTracker.Validation;
 using HealthyTracker.Validation.Extensions;
 using LanguageExt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthyTracker.Controllers;
@@ -20,18 +25,24 @@ public class AuthController : ControllerBase
     private readonly IRefreshTokenService _refreshTokenService;
     private readonly IPasswordService _passwordService;
     private readonly IValidatorService _validator;
+    private UserManager<User> _userManager;
+    private readonly IMapper _mapper;
     
     public AuthController(IAuthService authService,
         IEmailConfirmationService emailConfirmationService,
         IRefreshTokenService refreshTokenService,
         IPasswordService passwordService,
-        IValidatorService validator)
+        IValidatorService validator,
+        UserManager<User> userManager, 
+        IMapper mapper)
     {
         _authService = authService;
         _emailConfirmationService = emailConfirmationService;
         _refreshTokenService = refreshTokenService;
         _passwordService = passwordService;
         _validator = validator;
+        _userManager = userManager;
+        _mapper = mapper;
     }
     
     [HttpPost("sign-up")]
@@ -50,11 +61,15 @@ public class AuthController : ControllerBase
         return result.ToActionResult();
     }
 
-    [HttpPost("me")]
+    [HttpGet("me")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ProducesResponseType(typeof(string), 200)]
     public async Task<IActionResult> Me()
     {
-        return Ok(new() {});
+        var userId = HttpContext.GetUserId();
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var userDto = _mapper.Map<UserDTO>(user);
+        return Ok(userDto);
     }
     
     [HttpPost("confirm-email")]

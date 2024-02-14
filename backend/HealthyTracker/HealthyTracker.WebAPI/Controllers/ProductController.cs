@@ -1,5 +1,7 @@
 ﻿using HealthyTracker.BLL.Services.ProductService.Interfaces;
 using HealthyTracker.BLL.Services.ProductService.Services;
+using HealthyTracker.Common.Models.Request;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +9,7 @@ namespace HealthyTracker.WebAPI.Controllers;
 
 
 [ApiController]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("api/product")]
 public class ProductController : ControllerBase
 {
@@ -18,12 +21,11 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
-    public async Task<IActionResult> AddProduct(string name, int volume, Guid mealId)
+    public async Task<IActionResult> AddProduct([FromBody] AddProductRequest request)
     {
         try
         {
-            await _productService.AddProduct(name, volume, mealId);
+            await _productService.AddProduct(request.Name, request.Volume, request.MealId);
             return Ok();
         }
         catch (Exception e)
@@ -33,7 +35,6 @@ public class ProductController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize]
     public async Task<IActionResult> UpdateProduct(Guid productId, int volume)
     {
         try
@@ -48,8 +49,6 @@ public class ProductController : ControllerBase
     }
 
     [HttpDelete]
-    
-    [Authorize]
     public async Task<IActionResult> DeleteProduct(Guid productId)
     {
         try
